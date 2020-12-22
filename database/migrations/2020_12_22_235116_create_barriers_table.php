@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLevelsTable extends Migration
+class CreateBarriersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('levels', function (Blueprint $table) {
+        Schema::create('barriers', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->decimal('price');
-            $table->unsignedInteger('days');
-            $table->string('note')->default('');
+            $table->unsignedTinyInteger('status')->default(true);
+            $table->unsignedTinyInteger('direction');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('levels');
+        Schema::dropIfExists('barriers');
     }
 }

@@ -16,6 +16,7 @@
         "dcat/laravel-admin": "2.*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "godruoyi/php-snowflake": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.12",

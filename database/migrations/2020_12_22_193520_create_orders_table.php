@@ -15,7 +15,14 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('car_id')->index();
+            $table->unsignedBigInteger('payment_id')->index();
+            $table->decimal('price')->default(0);
+            $table->char('no',18)->unique();
             $table->timestamps();
+            $table->timestamp('outed_at')->nullable();
+            $table->softDeletes();
         });
     }
 
