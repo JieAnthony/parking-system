@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Dcat Admin',
+    'name' => 'PARKING',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<img src="/vendor/dcat-admin/images/logo.png" width="35"> &nbsp;Dcat Admin',
+    'logo' => '<img src="/vendor/dcat-admin/images/logo.png" width="35"> &nbsp;PARKING',
 
     /*
     |--------------------------------------------------------------------------
@@ -138,7 +138,7 @@ return [
         ],
 
         // Add "remember me" to login form
-        'remember' => true,
+        'remember' => false,
 
         // All method to path like: auth/users/*/edit
         // or specific method to path like: get:auth/users.
@@ -200,8 +200,8 @@ return [
     'menu' => [
         'cache' => [
             // enable cache or not
-            'enable' => false,
-            'store'  => 'file',
+            'enable' => true,
+            'store'  => env('CACHE_DRIVER', 'file'),
         ],
 
         // Whether enable menu bind to a permission.

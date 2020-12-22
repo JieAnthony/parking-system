@@ -9,19 +9,36 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-bcmath": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "bensampo/laravel-enum": "^3.2",
         "dcat/laravel-admin": "2.*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/horizon": "^5.6",
+        "laravel/tinker": "^2.5",
+        "orangehill/iseed": "^3.0",
+        "overtrue/easy-sms": "^1.2",
+        "overtrue/laravel-lang": "^4.2",
+        "overtrue/laravel-wechat": "^6.0",
+        "tucker-eric/eloquentfilter": "^2.4",
+        "tymon/jwt-auth": "^1.0",
+        "yansongda/pay": "^2.10"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.8",
+        "beyondcode/laravel-dump-server": "^1.7",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^0.0.5",
+        "matt-allan/laravel-code-style": "^0.6.0",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
+        "overtrue/laravel-query-logger": "^2.1",
         "phpunit/phpunit": "^9.3.3"
     },
     "config": {
@@ -49,6 +66,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "cs-fix": "php-cs-fixer fix",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
