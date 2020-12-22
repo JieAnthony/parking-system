@@ -3,7 +3,7 @@
 /404.html
 /index.html
 /.htaccess
-/.user.ini
+/public/.user.ini
 /.idea
 /node_modules
 /public/hot
