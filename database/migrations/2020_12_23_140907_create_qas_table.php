@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinancesTable extends Migration
+class CreateQasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateFinancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('finances', function (Blueprint $table) {
+        Schema::create('qas', function (Blueprint $table) {
             $table->id();
-            $table->char('no',18)->unique();
-            $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('level_id');
-            $table->unsignedTinyInteger('status')->default(0);
+            $table->string('title');
+            $table->mediumText('content')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateFinancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('finances');
+        Schema::dropIfExists('qas');
     }
 }

@@ -15,7 +15,15 @@ class CreateCarsTable extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
+            $table->string('first_word', 5);
+            $table->string('license', 10);
+            $table->unsignedTinyInteger('is_big')->default(0);
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
+            $table->unique([
+                'first_word',
+                'license'
+            ]);
         });
     }
 

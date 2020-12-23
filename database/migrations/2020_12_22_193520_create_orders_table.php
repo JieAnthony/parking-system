@@ -15,11 +15,14 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->char('no',18)->unique();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('car_id')->index();
-            $table->unsignedBigInteger('payment_id')->index();
-            $table->decimal('price')->default(0);
-            $table->char('no',18)->unique();
+            $table->unsignedTinyInteger('status')->default(0);
+            $table->unsignedBigInteger('enter_barrier_id');
+            $table->unsignedBigInteger('out_barrier_id')->nullable();
+            $table->unsignedBigInteger('payment_id')->nullable();
+            $table->decimal('price')->nullable();
             $table->timestamps();
             $table->timestamp('outed_at')->nullable();
             $table->softDeletes();
