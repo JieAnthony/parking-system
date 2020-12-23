@@ -23,3 +23,4 @@ composer.lock
 _ide_helper.php
 _ide_helper_models.php
 .php_cs.cache
+dcat_admin_ide_helper.php
