@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->default('');
             $table->unsignedTinyInteger('gender')->default(0);
             $table->timestamps();
-            $table->date('birthday')->nullable();
             $table->date('end_at')->nullable();
         });
     }

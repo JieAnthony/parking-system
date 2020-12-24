@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-class Qa extends Model
+class Dictionary extends Model
 {
     /**
      * @var string[]
      */
     protected $fillable = [
-        'title',
-        'content',
+        'name',
+        'order',
     ];
 }
