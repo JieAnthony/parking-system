@@ -20,10 +20,8 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'password',
         'level_id',
-        'surplus_days',
         'nickname',
         'avatar',
-        'gender',
         'end_at',
     ];
 
@@ -31,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $casts = [
-        'end_at' => 'date',
+        'end_at' => 'date:Y-m-d',
     ];
 
     /**
@@ -42,6 +40,15 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
     ];
+
+    /**
+     * @param \DateTimeInterface $date
+     * @return string
+     */
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format($this->dateFormat ?: 'Y-m-d H:i:s');
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -97,7 +104,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function level()
     {
-        return $this->belongsTo(Level::class);
+        return $this->belongsTo(Level::class)->withDefault(['name' => '注册会员']);
     }
 
     /**

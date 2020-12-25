@@ -4,6 +4,17 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 
 Grid::resolving(function (Grid $grid) {
+    // 开启弹窗创建
+    $grid->enableDialogCreate();
+    // 禁用编辑按钮
+    $grid->disableEditButton();
+    // 显示快捷编辑按钮
+    $grid->showQuickEditButton();
+    // 禁用 行选择器
+    $grid->disableRowSelector();
+    // 禁用批量删除按钮
+    $grid->disableBatchDelete();
+    // 设置工具栏按钮样式
     $grid->toolsWithOutline(false);
 });
 

@@ -11,6 +11,14 @@ use Dcat\Admin\Show;
 class LevelController extends AdminController
 {
     /**
+     * @return string
+     */
+    public function title()
+    {
+        return '级别';
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -18,17 +26,13 @@ class LevelController extends AdminController
     protected function grid()
     {
         return Grid::make(new Level(), function (Grid $grid) {
-            $grid->column('id')->sortable();
-            $grid->column('name');
-            $grid->column('price');
-            $grid->column('days');
-            $grid->column('note');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-            });
+            $grid->model()->orderByDesc('id');
+            $grid->column('id');
+            $grid->column('name', '级别名称');
+            $grid->column('price', '价格');
+            $grid->column('days', '使用天数');
+            $grid->column('note', '备注');
+            $grid->column('created_at', '创建时间');
         });
     }
 
@@ -43,12 +47,11 @@ class LevelController extends AdminController
     {
         return Show::make($id, new Level(), function (Show $show) {
             $show->field('id');
-            $show->field('name');
-            $show->field('price');
-            $show->field('days');
-            $show->field('note');
-            $show->field('created_at');
-            $show->field('updated_at');
+            $show->field('name', '级别名称');
+            $show->field('price', '价格');
+            $show->field('days', '使用天数');
+            $show->field('note', '备注');
+            $show->field('created_at', '创建时间');
         });
     }
 
@@ -60,14 +63,13 @@ class LevelController extends AdminController
     protected function form()
     {
         return Form::make(new Level(), function (Form $form) {
-            $form->display('id');
-            $form->text('name');
-            $form->text('price');
-            $form->text('days');
-            $form->text('note');
-
-            $form->display('created_at');
-            $form->display('updated_at');
+            $id = $form->getKey();
+            $form->text('name', '级别名称')
+                ->creationRules(['required', 'unique:levels'])
+                ->updateRules(['required', "unique:levels,name,$id"]);
+            $form->currency('price', '价格')->default('')->symbol('￥')->required()->rules('gte:0');
+            $form->number('days', '使用天数')->required()->rules('gt:0');
+            $form->textarea('note', '备注');
         });
     }
 }
