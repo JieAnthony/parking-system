@@ -79,11 +79,13 @@ class UserController extends AdminController
             $form->text('nickname', '昵称')->required();
             $form->text('username', '手机号')
                 ->required()
+                ->rules('regex:/^1[35678][0-9]{9}$/')
                 ->creationRules(['required', 'unique:users'])
                 ->updateRules(['required', "unique:users,username,$id"]);
             if ($id) {
                 $form->password('password', '密码')
                     ->help('不填则不修改密码')
+                    ->rules('string')
                     ->minLength(6)
                     ->maxLength(32)
                     ->customFormat(function () {
@@ -92,6 +94,7 @@ class UserController extends AdminController
             } else {
                 $form->password('password', '密码')
                     ->required()
+                    ->rules('string')
                     ->minLength(6)
                     ->maxLength(32);
             }

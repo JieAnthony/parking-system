@@ -65,6 +65,7 @@ class LevelController extends AdminController
         return Form::make(new Level(), function (Form $form) {
             $id = $form->getKey();
             $form->text('name', '级别名称')
+                ->required()
                 ->creationRules(['required', 'unique:levels'])
                 ->updateRules(['required', "unique:levels,name,$id"]);
             $form->currency('price', '价格')->default('')->symbol('￥')->required()->rules('gte:0');

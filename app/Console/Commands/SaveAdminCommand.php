@@ -19,7 +19,7 @@ class SaveAdminCommand extends Command
      *
      * @var string
      */
-    protected $description = '快速保存数据库数据到填充类';
+    protected $description = '快速保存后台数据数据到填充类';
 
     /**
      * Create a new command instance.

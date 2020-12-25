@@ -15,4 +15,5 @@ Route::group([
 
     $router->resource('users', 'UserController');
     $router->resource('levels', 'LevelController');
+    $router->resource('qas', 'QaController');
 });

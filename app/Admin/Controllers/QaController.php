@@ -11,6 +11,14 @@ use Dcat\Admin\Show;
 class QaController extends AdminController
 {
     /**
+     * @return string
+     */
+    public function title()
+    {
+        return '常见问题';
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -18,15 +26,11 @@ class QaController extends AdminController
     protected function grid()
     {
         return Grid::make(new Qa(), function (Grid $grid) {
+            $grid->disableEditButton(false);
+            $grid->showQuickEditButton(false);
+            $grid->model()->select(['id', 'title'])->orderByDesc('id');
             $grid->column('id')->sortable();
-            $grid->column('title');
-            $grid->column('content');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-            });
+            $grid->column('title', '标题');
         });
     }
 
@@ -41,10 +45,8 @@ class QaController extends AdminController
     {
         return Show::make($id, new Qa(), function (Show $show) {
             $show->field('id');
-            $show->field('title');
-            $show->field('content');
-            $show->field('created_at');
-            $show->field('updated_at');
+            $show->field('title', '标题');
+            $show->html($show->model()->content);
         });
     }
 
@@ -57,11 +59,8 @@ class QaController extends AdminController
     {
         return Form::make(new Qa(), function (Form $form) {
             $form->display('id');
-            $form->text('title');
-            $form->text('content');
-
-            $form->display('created_at');
-            $form->display('updated_at');
+            $form->text('title', '标题');
+            $form->editor('content', '内容');
         });
     }
 }
