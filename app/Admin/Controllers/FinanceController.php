@@ -13,6 +13,14 @@ use Dcat\Admin\Show;
 class FinanceController extends AdminController
 {
     /**
+     * @return string
+     */
+    public function title()
+    {
+        return '财务明细';
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid

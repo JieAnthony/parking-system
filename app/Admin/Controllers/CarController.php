@@ -11,6 +11,14 @@ use Dcat\Admin\Show;
 class CarController extends AdminController
 {
     /**
+     * @return string
+     */
+    public function title()
+    {
+        return '车辆';
+    }
+
+    /**
      * Make a grid builder.
      *
      * @return Grid

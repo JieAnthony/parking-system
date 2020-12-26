@@ -12,9 +12,10 @@ Route::group([
     'middleware' => config('admin.route.middleware'),
 ], function (Router $router) {
     $router->get('/', 'HomeController@index');
-
     $router->resource('users', 'UserController');
     $router->resource('levels', 'LevelController');
     $router->resource('finances', 'FinanceController')->only(['index']);
+    $router->resource('cars', 'CarController');
+    $router->resource('dictionaries', 'DictionaryController');
     $router->resource('qas', 'QaController');
 });
