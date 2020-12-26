@@ -54,7 +54,6 @@ class Finance extends Model
      * @var string[]
      */
     protected $casts = [
-        'status' => 'boolean',
         'price' => 'decimal:2',
     ];
 

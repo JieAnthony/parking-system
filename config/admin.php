@@ -278,7 +278,7 @@ return [
     */
     'layout' => [
         // default, blue, blue-light, green
-        'color' => 'default',
+        'color' => 'blue',
 
         'body_class' => '',
 
@@ -287,7 +287,7 @@ return [
         // light, primary, dark
         'sidebar_style' => 'light',
 
-        'dark_mode_switch' => false,
+        'dark_mode_switch' => true,
 
         // bg-primary, bg-info, bg-warning, bg-success, bg-danger, bg-dark
         'navbar_color' => '',

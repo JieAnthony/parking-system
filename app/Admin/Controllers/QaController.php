@@ -7,6 +7,7 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Show;
+use Mews\Purifier\Facades\Purifier;
 
 class QaController extends AdminController
 {
@@ -26,6 +27,7 @@ class QaController extends AdminController
     protected function grid()
     {
         return Grid::make(new Qa(), function (Grid $grid) {
+            $grid->createMode('default');
             $grid->disableEditButton(false);
             $grid->showQuickEditButton(false);
             $grid->model()->select(['id', 'title'])->orderByDesc('id');
@@ -59,8 +61,14 @@ class QaController extends AdminController
     {
         return Form::make(new Qa(), function (Form $form) {
             $form->display('id');
-            $form->text('title', '标题');
-            $form->editor('content', '内容');
+            $form->text('title', '标题')
+                ->required()
+                ->rules('string|max:255');
+            $form->editor('content', '内容')->required();
+        })->saving(function (Form $form) {
+            if ($form->content) {
+                $form->content = htmlspecialchars(Purifier::clean($form->content));
+            }
         });
     }
 }

@@ -15,5 +15,6 @@ Route::group([
 
     $router->resource('users', 'UserController');
     $router->resource('levels', 'LevelController');
+    $router->resource('finances', 'FinanceController')->only(['index']);
     $router->resource('qas', 'QaController');
 });

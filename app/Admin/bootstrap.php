@@ -2,13 +2,14 @@
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Show;
 
 Grid::resolving(function (Grid $grid) {
     // 开启弹窗创建
     $grid->enableDialogCreate();
-    // 禁用编辑按钮
+    // 禁用 编辑按钮
     $grid->disableEditButton();
-    // 显示快捷编辑按钮
+    // 显示 快捷编辑按钮
     $grid->showQuickEditButton();
     // 禁用 行选择器
     $grid->disableRowSelector();
@@ -16,6 +17,16 @@ Grid::resolving(function (Grid $grid) {
     $grid->disableBatchDelete();
     // 设置工具栏按钮样式
     $grid->toolsWithOutline(false);
+});
+
+Show::resolving(function (Show $show) {
+    $show->panel()
+        ->tools(function ($tools) {
+            // 禁用 编辑
+            $tools->disableEdit();
+            // 禁用 删除
+            $tools->disableDelete();
+        });
 });
 
 Form::resolving(function (Form $form) {

@@ -18,15 +18,10 @@ class DictionaryController extends AdminController
     protected function grid()
     {
         return Grid::make(new Dictionary(), function (Grid $grid) {
-            $grid->column('id')->sortable();
-            $grid->column('name');
-            $grid->column('order');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-            });
+            $grid->model()->orderByDesc('id');
+            $grid->column('id');
+            $grid->column('name', '首字');
+            $grid->column('order', '排序');
         });
     }
 
@@ -41,10 +36,8 @@ class DictionaryController extends AdminController
     {
         return Show::make($id, new Dictionary(), function (Show $show) {
             $show->field('id');
-            $show->field('name');
-            $show->field('order');
-            $show->field('created_at');
-            $show->field('updated_at');
+            $show->field('name', '首字');
+            $show->field('order', '排序');
         });
     }
 
@@ -57,11 +50,10 @@ class DictionaryController extends AdminController
     {
         return Form::make(new Dictionary(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
-            $form->text('order');
-
-            $form->display('created_at');
-            $form->display('updated_at');
+            $form->text('name', '首字')
+                ->required()
+                ->rules('unique:users');
+            $form->number('order', '排序');
         });
     }
 }

@@ -44,13 +44,6 @@ class Barrier extends Model
     ];
 
     /**
-     * @var string[]
-     */
-    protected $casts = [
-        'status' => 'boolean',
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function enterOrder()

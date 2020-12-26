@@ -50,7 +50,6 @@ class Car extends Model
      * @var string[]
      */
     protected $casts = [
-        'status' => 'boolean',
         'is_big' => 'boolean',
     ];
 
