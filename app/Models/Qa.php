@@ -7,7 +7,7 @@ namespace App\Models;
  *
  * @property int $id
  * @property string $title
- * @property string|null $content
+ * @property string $content
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
@@ -35,4 +35,13 @@ class Qa extends Model
         'title',
         'content',
     ];
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getContentAttribute($value)
+    {
+        return htmlspecialchars_decode($value);
+    }
 }

@@ -15,8 +15,8 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->char('no',18)->unique();
-            $table->unsignedBigInteger('user_id')->index();
+            $table->char('no',19)->unique();
+            $table->unsignedBigInteger('user_id')->default(0)->index();
             $table->unsignedBigInteger('car_id')->index();
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedBigInteger('enter_barrier_id');
@@ -24,7 +24,9 @@ class CreateOrdersTable extends Migration
             $table->unsignedTinyInteger('payment')->nullable();
             $table->decimal('price')->nullable();
             $table->timestamps();
+            $table->timestamp('entered_at')->nullable();
             $table->timestamp('outed_at')->nullable();
+            $table->timestamp('payed_at')->nullable();
             $table->softDeletes();
         });
     }

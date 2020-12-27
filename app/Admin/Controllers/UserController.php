@@ -10,6 +10,9 @@ use Dcat\Admin\Show;
 
 class UserController extends AdminController
 {
+    /**
+     * @return string
+     */
     public function title()
     {
         return '会员';
@@ -23,6 +26,7 @@ class UserController extends AdminController
     protected function grid()
     {
         return Grid::make(new User(), function (Grid $grid) {
+            $grid->disableDeleteButton();
             $grid->model()
                 ->with([
                     'level' => function ($query) {

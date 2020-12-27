@@ -12,10 +12,17 @@ Route::group([
     'middleware' => config('admin.route.middleware'),
 ], function (Router $router) {
     $router->get('/', 'HomeController@index');
-    $router->resource('users', 'UserController');
+    $router->resource('users', 'UserController')->except(['destroy']);
     $router->resource('levels', 'LevelController');
+    $router->resource('orders', 'OrderController')->only(['index', 'create', 'store', 'show']);
     $router->resource('finances', 'FinanceController')->only(['index']);
     $router->resource('cars', 'CarController');
-    $router->resource('dictionaries', 'DictionaryController');
+    $router->resource('barriers', 'BarrierController')->except(['show']);
+    $router->resource('dictionaries', 'DictionaryController')->except(['show']);
     $router->resource('qas', 'QaController');
+
+    $router->get('system/info', 'SystemController@info');
+    $router->get('system/deduction', 'SystemController@deduction');
+
+    $router->any('upload', 'UploadController@handle');
 });

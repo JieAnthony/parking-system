@@ -15,6 +15,10 @@ final class PaymentEnum extends Enum
     const WECHAT = 1;
     const ALI = 2;
 
+    /**
+     * @param mixed $value
+     * @return string
+     */
     public static function getDescription($value): string
     {
         switch ($value) {

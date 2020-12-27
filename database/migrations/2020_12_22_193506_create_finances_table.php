@@ -15,7 +15,7 @@ class CreateFinancesTable extends Migration
     {
         Schema::create('finances', function (Blueprint $table) {
             $table->id();
-            $table->char('no',18)->unique();
+            $table->char('no',19)->unique();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('level_id');
             $table->unsignedTinyInteger('payment')->nullable();

@@ -11,7 +11,7 @@ namespace App\Models;
  * @property int $level_id
  * @property int|null $payment
  * @property mixed|null $price
- * @property bool $status
+ * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Level $level

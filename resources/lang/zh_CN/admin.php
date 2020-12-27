@@ -79,7 +79,7 @@ return [
     'filter'                => '筛选',
     'search'                => '搜索',
     'close'                 => '关闭',
-    'show'                  => '显示',
+    'show'                  => '详情',//'显示',
     'entries'               => '条',
     'captcha'               => '验证码',
     'action'                => '操作',

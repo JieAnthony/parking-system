@@ -6,10 +6,8 @@ namespace App\Models;
  * App\Models\Car.
  *
  * @property int $id
- * @property string $first_word
  * @property string $license
- * @property bool $is_big
- * @property bool $status
+ * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
@@ -25,9 +23,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Car whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
- * @method static \Illuminate\Database\Eloquent\Builder|Car whereFirstWord($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Car whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Car whereIsBig($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Car whereLicense($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Car whereStatus($value)
@@ -40,17 +36,8 @@ class Car extends Model
      * @var string[]
      */
     protected $fillable = [
-        'first_word',
         'license',
-        'is_big',
         'status',
-    ];
-
-    /**
-     * @var string[]
-     */
-    protected $casts = [
-        'is_big' => 'boolean',
     ];
 
     /**

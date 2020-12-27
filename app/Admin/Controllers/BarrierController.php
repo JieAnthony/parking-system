@@ -3,13 +3,21 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Barrier;
+use App\Enums\BarrierDirectionEnum;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
-use Dcat\Admin\Show;
 
 class BarrierController extends AdminController
 {
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return '道闸';
+    }
+
     /**
      * Make a grid builder.
      *
@@ -18,35 +26,14 @@ class BarrierController extends AdminController
     protected function grid()
     {
         return Grid::make(new Barrier(), function (Grid $grid) {
+            $grid->disableViewButton();
+            $grid->model()->orderByDesc('id');
             $grid->column('id')->sortable();
-            $grid->column('name');
-            $grid->column('status');
-            $grid->column('direction');
-            $grid->column('created_at');
-            $grid->column('updated_at')->sortable();
-
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+            $grid->column('name', '名称');
+            $grid->column('direction', '方向')->display(function ($direction) {
+                return BarrierDirectionEnum::getDescription($direction);
             });
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Barrier(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('status');
-            $show->field('direction');
-            $show->field('created_at');
-            $show->field('updated_at');
+            $grid->column('status', '状态')->bool();
         });
     }
 
@@ -58,13 +45,13 @@ class BarrierController extends AdminController
     protected function form()
     {
         return Form::make(new Barrier(), function (Form $form) {
-            $form->display('id');
-            $form->text('name');
-            $form->text('status');
-            $form->text('direction');
-
-            $form->display('created_at');
-            $form->display('updated_at');
+            $id = $form->getKey();
+            $form->text('name', '道闸名称')
+                ->required()
+                ->maxLength(255)
+                ->rules("string|max:255|unique_with:barriers,direction,$id");
+            $form->switch('status', '状态');
+            $form->select('direction', '道闸方向')->required()->options(BarrierDirectionEnum::asSelectArray());
         });
     }
 }

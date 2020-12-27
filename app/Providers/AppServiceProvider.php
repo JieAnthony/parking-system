@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Qa;
+use App\Observers\QaObserver;
 use Godruoyi\Snowflake\LaravelSequenceResolver;
 use Godruoyi\Snowflake\Snowflake;
 use Illuminate\Support\ServiceProvider;
@@ -30,5 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 ->setStartTimeStamp(strtotime('2020-01-01') * 1000)
                 ->setSequenceResolver(new LaravelSequenceResolver($this->app->get('cache')->store()));
         });
+
+        Qa::observe(QaObserver::class);
     }
 }

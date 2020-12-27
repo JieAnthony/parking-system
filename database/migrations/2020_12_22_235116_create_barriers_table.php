@@ -15,10 +15,14 @@ class CreateBarriersTable extends Migration
     {
         Schema::create('barriers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->unsignedTinyInteger('status')->default(true);
             $table->unsignedTinyInteger('direction');
             $table->timestamps();
+            $table->unique([
+                'name',
+                'direction'
+            ]);
         });
     }
 

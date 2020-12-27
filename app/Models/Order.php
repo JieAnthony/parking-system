@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property mixed|null $price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $entered_at
  * @property \Illuminate\Support\Carbon|null $outed_at
+ * @property \Illuminate\Support\Carbon|null $payed_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\Car $car
  * @property-read \App\Models\Barrier $enterBarrier
@@ -37,11 +39,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereEnterBarrierId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereEnteredAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereNo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereOutBarrierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereOutedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
@@ -67,6 +71,8 @@ class Order extends Model
         'out_barrier_id',
         'payment',
         'price',
+        'payed_at',
+        'entered_at',
         'outed_at',
     ];
 
@@ -81,6 +87,8 @@ class Order extends Model
      * @var string[]
      */
     protected $dates = [
+        'payed_at',
+        'entered_at',
         'outed_at',
     ];
 

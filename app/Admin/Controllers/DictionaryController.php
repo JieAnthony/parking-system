@@ -8,7 +8,6 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
-use Dcat\Admin\Show;
 use Dcat\Admin\Widgets\Callout;
 
 class DictionaryController extends AdminController
@@ -44,26 +43,11 @@ class DictionaryController extends AdminController
     protected function grid()
     {
         return Grid::make(new Dictionary(), function (Grid $grid) {
+            $grid->disableViewButton();
             $grid->model()->orderBy('order')->orderByDesc('id');
             $grid->column('id');
             $grid->column('name', '首字');
             $grid->column('order', '排序');
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Dictionary(), function (Show $show) {
-            $show->field('id');
-            $show->field('name', '首字');
-            $show->field('order', '排序');
         });
     }
 

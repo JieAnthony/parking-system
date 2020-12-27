@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+namespace App\Http\Controllers\Api;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::name('api.')->group(function () {
+    Route::get('home', [HomeController::class, 'home'])->name('home');
+    Route::get('qas', [QaController::class, 'index'])->name('qas.index');
 });

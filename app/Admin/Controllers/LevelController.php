@@ -66,8 +66,8 @@ class LevelController extends AdminController
             $id = $form->getKey();
             $form->text('name', '级别名称')
                 ->required()
-                ->creationRules(['required', 'unique:levels'])
-                ->updateRules(['required', "unique:levels,name,$id"]);
+                ->maxLength(255)
+                ->rules("string|max:255|unique:levels,name,$id");
             $form->currency('price', '价格')->default('')->symbol('￥')->required()->rules('gte:0');
             $form->number('days', '使用天数')->required()->rules('gt:0');
             $form->textarea('note', '备注');

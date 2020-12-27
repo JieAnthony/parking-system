@@ -13,6 +13,10 @@ final class FinanceEnum extends Enum
     const OK = 1;
     const FAIL = 0;
 
+    /**
+     * @param mixed $value
+     * @return string
+     */
     public static function getDescription($value): string
     {
         switch ($value) {
