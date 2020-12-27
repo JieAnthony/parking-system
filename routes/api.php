@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('api.')->group(function () {
+    Route::get('/', [HomeController::class, 'home'])->name('root');
     Route::get('home', [HomeController::class, 'home'])->name('home');
     Route::get('qas', [QaController::class, 'index'])->name('qas.index');
 });
