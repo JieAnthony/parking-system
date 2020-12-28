@@ -9,6 +9,37 @@ use App\Models\Order;
 class OrderService extends Service
 {
     /**
+     * @param int $userId
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function getUserOrderList(int $userId)
+    {
+        return Order::query()
+            ->with([
+                'car' => function ($query) {
+                    $query->select(['id', 'license']);
+                },
+            ])
+            ->where('user_id', $userId)
+            ->select([
+                'id', 'no', 'user_id', 'car_id', 'status', 'entered_at', 'price',
+            ])
+            ->orderByDesc('id')
+            ->paginate(config('info.page.limit'));
+    }
+
+    /**
+     * @param Order $order
+     * @return Order
+     */
+    public function getOrderDetail(Order $order)
+    {
+        return $order->load([
+            'car',
+        ]);
+    }
+
+    /**
      * @param string $license
      * @param int $enterBarrierId
      * @param string|null $enteredAt
@@ -32,20 +63,66 @@ class OrderService extends Service
     }
 
     /**
-     * @param int $carId
-     * @return bool
+     * @param Order $order
+     * @return bool|null
+     * @throws \Exception
      */
-    public function hasOrderParking(int $carId)
+    public function delete(Order $order)
     {
-        return Order::query()
+        return $order->delete();
+    }
+
+    /**
+     * @param string $license
+     * @return array
+     * @throws BusinessException
+     */
+    public function findCarOrder(string $license)
+    {
+        $car = app(CarService::class)->getCarByLicense($license);
+        if (! $car) {
+            throw new BusinessException('查询错误！车辆或者订单不存在');
+        }
+        $order = $this->hasOrderParking($car->id, true);
+        if (! $order) {
+            throw new BusinessException('暂无进行中的订单！');
+        }
+        $price = $this->getOrderPrice($order);
+
+        return compact('order', 'price');
+    }
+
+    /**
+     * @param int $carId
+     * @param bool $isModel
+     * @return Order|bool|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function hasOrderParking(int $carId, bool $isModel = false)
+    {
+        $query = Order::query()
             ->where('car_id', $carId)
-            ->where('status', OrderStatusEnum::PARKING)
-            ->exists();
+            ->where('status', OrderStatusEnum::PARKING);
+        if ($isModel) {
+            return $query->first();
+        } else {
+            return $query->exists();
+        }
     }
 
     public function getOrderPrice($order)
     {
-        return '15.00';
+        if (is_int($order)) {
+            $order = $this->getOrderById($order);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return Order|Order[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function getOrderById(int $id)
+    {
+        return Order::query()->findOrFail($id);
     }
 
     /**
