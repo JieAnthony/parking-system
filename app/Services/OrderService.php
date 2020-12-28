@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\OrderStatusEnum;
 use App\Exceptions\BusinessException;
 use App\Models\Order;
+use App\Models\User;
 
 class OrderService extends Service
 {
@@ -31,9 +32,14 @@ class OrderService extends Service
     /**
      * @param Order $order
      * @return Order
+     * @throws BusinessException
      */
     public function getOrderDetail(Order $order)
     {
+        if ($order->status !== OrderStatusEnum::DONE) {
+            throw new BusinessException('订单有误');
+        }
+
         return $order->load([
             'car',
         ]);
@@ -81,15 +87,27 @@ class OrderService extends Service
     {
         $car = app(CarService::class)->getCarByLicense($license);
         if (! $car) {
-            throw new BusinessException('查询错误！车辆或者订单不存在');
+            throw new BusinessException('查询错误【暂无该车辆正在进行中的订单】');
         }
         $order = $this->hasOrderParking($car->id, true);
         if (! $order) {
-            throw new BusinessException('暂无进行中的订单！');
+            throw new BusinessException('查询错误【该车辆暂无正在进行中的订单】');
         }
-        $price = $this->getOrderPrice($order);
+        $price = $this->getParkingOrderPrice($order);
+        $time = $this->getParkingOrderTimeSpent($order);
 
-        return compact('order', 'price');
+        return compact('order', 'price', 'time');
+    }
+
+    public function pay(Order $order, int $payment, User $user = null)
+    {
+        if ($order->status == OrderStatusEnum::DONE) {
+            throw new BusinessException('订单支付失败，该订单已完成！');
+        }
+        $body = '支付停车费';
+        $price = $this->getParkingOrderPrice($order);
+
+        return app(PayService::class)->sendPay($order->no, $body, $price, $payment, $user);
     }
 
     /**
@@ -109,11 +127,37 @@ class OrderService extends Service
         }
     }
 
-    public function getOrderPrice($order)
+    /**
+     * @param $order
+     * @return string
+     */
+    public function getParkingOrderPrice($order)
     {
         if (is_int($order)) {
             $order = $this->getOrderById($order);
         }
+        if ($order->status !== OrderStatusEnum::PARKING) {
+            throw new BusinessException('订单状态有误');
+        }
+
+        return '15.00';
+    }
+
+    /**
+     * @param $order
+     * @return int[]
+     * @throws BusinessException
+     */
+    public function getParkingOrderTimeSpent($order)
+    {
+        if (! $order instanceof Order) {
+            $order = $this->getOrderById($order);
+        }
+        if ($order->status !== OrderStatusEnum::PARKING) {
+            throw new BusinessException('订单状态有误');
+        }
+
+        return $order->entered_at->diffAsCarbonInterval(now())->toArray();
     }
 
     /**

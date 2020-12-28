@@ -58,7 +58,6 @@ class OrderController extends AdminController
         return Grid::make(new Order(), function (Grid $grid) {
             $grid->disableDeleteButton();
             $grid->disableQuickEditButton();
-            $grid->actions([new OrderPayGrid()]);
             $grid->model()
                 ->with($this->getWithArray())
                 ->orderByDesc('id');
@@ -112,6 +111,11 @@ class OrderController extends AdminController
                 $table = new Table($headers, $data);
 
                 return "<div style='padding:10px 10px 0'>$table</div>";
+            });
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                if ($this->status == OrderStatusEnum::PARKING) {
+                    $actions->append(new OrderPayGrid());
+                }
             });
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('status', '订单状态')->select(OrderStatusEnum::asSelectArray());
@@ -233,7 +237,8 @@ class OrderController extends AdminController
                 $form->select('enter_barrier_id', '进场道闸')
                     ->options(function () {
                         return app(\App\Services\BarrierService::class)->getAdminSelect();
-                    });
+                    })
+                    ->required();
             }
         });
     }

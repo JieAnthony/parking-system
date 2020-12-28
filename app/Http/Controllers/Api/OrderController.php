@@ -56,8 +56,19 @@ class OrderController extends Controller
         return $this->response()->success('ok', $this->orderService->findCarOrder($license));
     }
 
+    /**
+     * @param PaymentRequest $request
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\BusinessException
+     */
     public function pay(PaymentRequest $request, Order $order)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $payment = $request->get('payment');
+
+        return $this->response()->success('ok', $this->orderService->pay($order, $payment, $user));
     }
 
     /**

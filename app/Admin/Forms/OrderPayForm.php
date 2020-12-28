@@ -48,10 +48,10 @@ class OrderPayForm extends Form implements LazyRenderable
         $this->confirm('您确认对方已付款并且设置订单为已完成吗？');
         $this->disableResetButton();
         $this->select('out_barrier_id', '离场道闸')
-        ->options(function () {
-            return app(\App\Services\BarrierService::class)->getAdminSelect(false);
-        })
-        ->required();
+            ->options(function () {
+                return app(\App\Services\BarrierService::class)->getAdminSelect(false);
+            })
+            ->required();
         $this->text('price', '金额')
             ->disable()
             ->help('停车费用');
@@ -70,7 +70,7 @@ class OrderPayForm extends Form implements LazyRenderable
     public function default()
     {
         return [
-            'price'  => time(),
+            'price' => app(OrderService::class)->getOrderPrice($this->payload['id']),
             'payment' => PaymentEnum::CASH,
         ];
     }
