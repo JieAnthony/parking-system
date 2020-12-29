@@ -6,6 +6,7 @@ use App\Enums\OrderStatusEnum;
 use App\Exceptions\BusinessException;
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class OrderService extends Service
 {
@@ -99,6 +100,13 @@ class OrderService extends Service
         return compact('order', 'price', 'time');
     }
 
+    /**
+     * @param Order $order
+     * @param int $payment
+     * @param User|null $user
+     * @return false|string|\Symfony\Component\HttpFoundation\Response|\Yansongda\Supports\Collection
+     * @throws BusinessException
+     */
     public function pay(Order $order, int $payment, User $user = null)
     {
         if ($order->status == OrderStatusEnum::DONE) {
@@ -140,7 +148,28 @@ class OrderService extends Service
             throw new BusinessException('订单状态有误');
         }
 
-        return '15.00';
+        $a = now();
+        $b = Carbon::parse('2020-12-29 17:40:28');
+        $c = $b->diff($a);
+        $top = 30;
+        $e = 5;
+        $price = 0;
+        $m = bcdiv($e, 60, 2);
+        if ($c->days > 0 || $c->h > 0 || $c->i > 15) {
+            if ($c->days !== 0) {
+                $price += bcmul($c->days, $top);
+            }
+            if ($c->h !== 0) {
+                if ($c->h >= bcdiv($top, $e, 0)) {
+                    $price += $top;
+                } else {
+                    $price += bcmul($c->h, $top);
+                }
+            }
+            if ($c->i !== 0) {
+                $price += (int) round(bcmul($c->i, $m, 3));
+            }
+        }
     }
 
     /**

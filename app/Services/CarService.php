@@ -53,6 +53,15 @@ class CarService
     }
 
     /**
+     * @param int $id
+     * @return Car|Car[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function getCarById(int $id)
+    {
+        return Car::query()->findOrFail($id);
+    }
+
+    /**
      * @param string $license
      * @param bool $needStore
      * @return Car|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null

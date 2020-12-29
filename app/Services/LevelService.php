@@ -25,20 +25,23 @@ class LevelService extends Service
     /**
      * @param Level $level
      * @param User $user
+     * @param int $carId
      * @param int $payment
      * @return false|string|\Symfony\Component\HttpFoundation\Response|\Yansongda\Supports\Collection
      * @throws BusinessException
      */
-    public function buy(Level $level, User $user, int $payment)
+    public function buy(Level $level, User $user, int $carId, int $payment)
     {
-        if ($user->level_id) {
-            throw new BusinessException('购买失败：目前级别并未到期！');
+        $car = app(CarService::class)->getCarById($carId);
+        if ($car->level_id) {
+            throw new BusinessException('该车辆目前已经是月卡，无需重复购买');
         }
         $no = $this->getNo(false);
         $finance = Finance::create([
             'no' => $no,
             'user_id' => $user->id,
             'level_id' => $level->id,
+            'car_id' => $carId,
             'payment' => $payment,
             'price' => $level->price,
         ]);
