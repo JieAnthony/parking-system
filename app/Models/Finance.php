@@ -8,12 +8,14 @@ namespace App\Models;
  * @property int $id
  * @property string $no
  * @property int $user_id
+ * @property int $car_id
  * @property int $level_id
  * @property int|null $payment
  * @property mixed|null $price
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Car $car
  * @property-read \App\Models\Level $level
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
@@ -23,6 +25,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|Finance query()
  * @method static \Illuminate\Database\Eloquent\Builder|Model simplePaginateFilter(?int $perPage = null, ?int $columns = [], ?int $pageName = 'page', ?int $page = null)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereBeginsWith(string $column, string $value, string $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|Finance whereCarId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereEndsWith(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereId($value)
@@ -44,6 +47,7 @@ class Finance extends Model
     protected $fillable = [
         'no',
         'user_id',
+        'car_id',
         'level_id',
         'price',
         'payment',
@@ -63,6 +67,14 @@ class Finance extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
     }
 
     /**

@@ -13,17 +13,14 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int $id
  * @property string $username
  * @property string $password
- * @property int $level_id
  * @property string $nickname
  * @property string $avatar
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property mixed|null $end_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Car[] $cars
  * @property-read int|null $cars_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Finance[] $finances
  * @property-read int|null $finances_count
- * @property-read \App\Models\Level $level
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
@@ -35,9 +32,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereEndAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLevelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereNickname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
@@ -56,17 +51,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'username',
         'password',
-        'level_id',
         'nickname',
         'avatar',
-        'end_at',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'end_at' => 'date:Y-m-d',
     ];
 
     /**
@@ -134,14 +120,6 @@ class User extends Authenticatable implements JWTSubject
     public function finances()
     {
         return $this->hasMany(Finance::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function level()
-    {
-        return $this->belongsTo(Level::class)->withDefault(['name' => '注册会员']);
     }
 
     /**

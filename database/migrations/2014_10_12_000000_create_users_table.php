@@ -17,11 +17,9 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->char('username',11)->unique();
             $table->string('password')->default('');
-            $table->unsignedBigInteger('level_id')->default(0)->index();
             $table->string('nickname')->default('');
             $table->string('avatar')->default('');
             $table->timestamps();
-            $table->date('end_at')->nullable();
         });
     }
 

@@ -54,6 +54,6 @@ class LevelService extends Service
     {
         $levels = Level::query()->pluck('name', 'id')->toArray();
 
-        return Arr::prepend($levels, '注册会员', 0);
+        return Arr::prepend($levels, '无', 0);
     }
 }

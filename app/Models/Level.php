@@ -12,8 +12,8 @@ namespace App\Models;
  * @property string $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
- * @property-read int|null $users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Car[] $cars
+ * @property-read int|null $cars_count
  * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
  * @method static \Illuminate\Database\Eloquent\Builder|Level newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Level newQuery()
@@ -54,8 +54,8 @@ class Level extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function users()
+    public function cars()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Car::class);
     }
 }

@@ -27,25 +27,14 @@ class UserController extends AdminController
     {
         return Grid::make(new User(), function (Grid $grid) {
             $grid->disableDeleteButton();
-            $grid->model()
-                ->with([
-                    'level' => function ($query) {
-                        $query->select(['id', 'name']);
-                    },
-                ])
-                ->orderByDesc('id');
+            $grid->model()->orderByDesc('id');
             $grid->column('id');
             $grid->column('avatar', '头像')->image('', 50, 50);
             $grid->column('nickname', '昵称');
             $grid->column('username', '手机号')->copyable();
-            $grid->column('level.name', '级别');
-            $grid->column('end_at', '截止日期');
             $grid->column('created_at', '注册时间');
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('username', '手机号');
-                $filter->equal('level_id', '级别')->select(function () {
-                    return app(\App\Services\LevelService::class)->getAdminSelect();
-                });
                 $filter->between('created_at', '注册时间')->date();
             });
         });
@@ -65,8 +54,6 @@ class UserController extends AdminController
             $show->field('avatar', '头像');
             $show->field('nickname', '昵称');
             $show->field('username', '手机号');
-            $show->field('level_id', '级别');
-            $show->field('end_at', '截止日期');
         });
     }
 
@@ -100,11 +87,6 @@ class UserController extends AdminController
                     ->minLength(6)
                     ->maxLength(32);
             }
-            $form->select('level_id', '级别')
-                ->options(function () {
-                    return app(\App\Services\LevelService::class)->getAdminSelect();
-                });
-            $form->date('end_at', '截止日期')->rules('date|after:'.now()->toDateString());
             $form->image('avatar', '头像')
                 ->removable(false)
                 ->uniqueName()
@@ -112,9 +94,6 @@ class UserController extends AdminController
         })->saving(function (Form $form) {
             if ($form->password && $form->model()->get('password') != $form->password) {
                 $form->password = bcrypt($form->password);
-            }
-            if (! $form->level_id) {
-                $form->level_id = 0;
             }
             if (! $form->password) {
                 $form->deleteInput('password');

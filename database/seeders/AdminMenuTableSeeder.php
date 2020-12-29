@@ -14,12 +14,12 @@ class AdminMenuTableSeeder extends Seeder
      */
     public function run()
     {
-        
+
 
         \DB::table('admin_menu')->delete();
-        
+
         \DB::table('admin_menu')->insert(array (
-            0 => 
+            0 =>
             array (
                 'id' => 1,
                 'parent_id' => 0,
@@ -32,7 +32,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => NULL,
             ),
-            1 => 
+            1 =>
             array (
                 'id' => 2,
                 'parent_id' => 0,
@@ -45,7 +45,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            2 => 
+            2 =>
             array (
                 'id' => 3,
                 'parent_id' => 2,
@@ -58,7 +58,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            3 => 
+            3 =>
             array (
                 'id' => 4,
                 'parent_id' => 2,
@@ -71,7 +71,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            4 => 
+            4 =>
             array (
                 'id' => 5,
                 'parent_id' => 2,
@@ -84,7 +84,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            5 => 
+            5 =>
             array (
                 'id' => 6,
                 'parent_id' => 2,
@@ -97,7 +97,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            6 => 
+            6 =>
             array (
                 'id' => 7,
                 'parent_id' => 2,
@@ -110,7 +110,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:02:14',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            7 => 
+            7 =>
             array (
                 'id' => 8,
                 'parent_id' => 0,
@@ -123,7 +123,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-24 23:11:11',
                 'updated_at' => '2020-12-24 23:11:19',
             ),
-            8 => 
+            8 =>
             array (
                 'id' => 9,
                 'parent_id' => 0,
@@ -136,7 +136,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 00:46:44',
                 'updated_at' => '2020-12-26 00:46:49',
             ),
-            9 => 
+            9 =>
             array (
                 'id' => 10,
                 'parent_id' => 0,
@@ -149,7 +149,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 00:57:50',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            10 => 
+            10 =>
             array (
                 'id' => 11,
                 'parent_id' => 0,
@@ -162,7 +162,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 18:31:41',
                 'updated_at' => '2020-12-26 19:28:26',
             ),
-            11 => 
+            11 =>
             array (
                 'id' => 12,
                 'parent_id' => 0,
@@ -175,20 +175,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 18:31:57',
                 'updated_at' => '2020-12-26 19:28:26',
             ),
-            12 => 
-            array (
-                'id' => 13,
-                'parent_id' => 0,
-                'order' => 8,
-                'title' => '车牌字典',
-                'icon' => 'fa-file-text',
-                'uri' => 'dictionaries',
-                'extension' => '',
-                'show' => 1,
-                'created_at' => '2020-12-26 18:32:35',
-                'updated_at' => '2020-12-26 19:42:40',
-            ),
-            13 => 
+            13 =>
             array (
                 'id' => 14,
                 'parent_id' => 0,
@@ -201,7 +188,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 19:28:19',
                 'updated_at' => '2020-12-26 19:28:26',
             ),
-            14 => 
+            14 =>
             array (
                 'id' => 15,
                 'parent_id' => 0,
@@ -214,7 +201,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 19:42:33',
                 'updated_at' => '2020-12-26 19:42:40',
             ),
-            15 => 
+            15 =>
             array (
                 'id' => 16,
                 'parent_id' => 0,
@@ -227,7 +214,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 20:07:18',
                 'updated_at' => '2020-12-26 20:07:18',
             ),
-            16 => 
+            16 =>
             array (
                 'id' => 17,
                 'parent_id' => 16,
@@ -240,7 +227,7 @@ class AdminMenuTableSeeder extends Seeder
                 'created_at' => '2020-12-26 20:13:34',
                 'updated_at' => '2020-12-26 20:18:10',
             ),
-            17 => 
+            17 =>
             array (
                 'id' => 18,
                 'parent_id' => 16,
@@ -254,7 +241,7 @@ class AdminMenuTableSeeder extends Seeder
                 'updated_at' => '2020-12-26 21:16:09',
             ),
         ));
-        
-        
+
+
     }
 }

@@ -17,7 +17,8 @@ class CreateFinancesTable extends Migration
             $table->id();
             $table->char('no',19)->unique();
             $table->unsignedBigInteger('user_id')->index();
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('car_id')->index();
+            $table->unsignedBigInteger('level_id')->index();
             $table->unsignedTinyInteger('payment')->nullable();
             $table->decimal('price')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
