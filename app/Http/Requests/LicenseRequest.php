@@ -24,7 +24,7 @@ class LicenseRequest extends FormRequest
     public function rules()
     {
         return [
-            'license' => 'required|string|max:9',
+            'license' => 'required|string|car_license',
         ];
     }
 }

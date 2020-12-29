@@ -80,6 +80,6 @@ class Car extends Model
      */
     public function level()
     {
-        return $this->belongsTo(Level::class)->withDefault(['name' => '无']);
+        return $this->belongsTo(Level::class);
     }
 }

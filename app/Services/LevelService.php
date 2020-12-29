@@ -27,18 +27,22 @@ class LevelService extends Service
      * @param User $user
      * @param int $carId
      * @param int $payment
-     * @return false|string|\Symfony\Component\HttpFoundation\Response|\Yansongda\Supports\Collection
+     * @return array
      * @throws BusinessException
      */
     public function buy(Level $level, User $user, int $carId, int $payment)
     {
+        $userHasCar = $user->cars()->where('car_id', $carId)->exists();
+        if (! $userHasCar) {
+            throw new BusinessException('您当前名下并没有关联提交的车，请重新选择！');
+        }
         $car = app(CarService::class)->getCarById($carId);
         if ($car->level_id) {
             throw new BusinessException('该车辆目前已经是月卡，无需重复购买');
         }
-        $no = $this->getNo(false);
+        $no = $this->getNo();
         $finance = Finance::create([
-            'no' => $no,
+            'no' => 'F'.$no,
             'user_id' => $user->id,
             'level_id' => $level->id,
             'car_id' => $carId,
@@ -47,7 +51,10 @@ class LevelService extends Service
         ]);
         $body = '购买级别【'.$level->name.'】';
 
-        return app(PayService::class)->sendPay($finance->no, $body, $finance->price, $payment, $user);
+        return [
+            'id' => $finance->id,
+            'pay' => app(PayService::class)->sendPay($finance->no, $body, $finance->price, $payment, $user),
+        ];
     }
 
     /**

@@ -28,17 +28,17 @@ class LevelController extends Controller
     }
 
     /**
-     * @param Level $level
      * @param BuyLevelRequest $request
+     * @param Level $level
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\BusinessException
      */
-    public function buy(Level $level, BuyLevelRequest $request)
+    public function buy(BuyLevelRequest $request, Level $level)
     {
         $user = $request->user();
         $payment = $request->get('payment');
         $carId = $request->get('car_id');
 
-        return $this->response()->success('ok', $this->levelService->buy($level, $user, $payment));
+        return $this->response()->success('ok', $this->levelService->buy($level, $user, $carId, $payment));
     }
 }

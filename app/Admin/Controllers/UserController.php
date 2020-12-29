@@ -70,7 +70,7 @@ class UserController extends AdminController
             $form->text('nickname', '昵称')->required();
             $form->text('username', '手机号')
                 ->required()
-                ->rules("unique:users,username,$id|regex:/^1[35678][0-9]{9}$/");
+                ->rules("unique:users,username,$id|phone");
             if ($id) {
                 $form->password('password', '密码')
                     ->help('不填则不修改密码')

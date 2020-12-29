@@ -24,7 +24,7 @@ class UserRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => 'required|unique:users|regex:/^1[35678][0-9]{9}$/',
+            'username' => 'required|unique:users|phone',
             'password' => 'required|string|min:6|max:32|confirmed',
             'code' => 'required|string|digits:'.config('info.sms_length'),
             'nickname' => 'required|string|max:255',

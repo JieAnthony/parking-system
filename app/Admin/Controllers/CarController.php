@@ -89,7 +89,7 @@ class CarController extends AdminController
                     ->required()
                     ->minLength(7)
                     ->maxLength(9)
-                    ->rules("string|unique:cars,license,$id");
+                    ->rules("string|license|unique:cars,license,$id");
             }
             $form->select('level_id', '级别')
                 ->options(function () {

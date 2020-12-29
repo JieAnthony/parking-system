@@ -31,7 +31,8 @@ class BuyLevelRequest extends FormRequest
         return [
             'car_id' => [
                 'required',
-                Rule::exists('cars', 'id')->where('user_id', $user->id),
+                Rule::exists('cars', 'id'),
+                Rule::exists('user_has_cars', 'car_id')->where('user_id', $user->id),
             ],
             'payment' => [
                 'required',

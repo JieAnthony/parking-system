@@ -26,7 +26,7 @@ class SmsService
             }
         }
         $data = $this->generate();
-        SendSmsCodeJob::dispatch($username, $data->code);
+        SendSmsCodeJob::dispatch($username, $data->get('code'));
 
         return Cache::put($username.'_code', $data, 60 * 10);
     }

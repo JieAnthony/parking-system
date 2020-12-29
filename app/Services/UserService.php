@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class UserService extends Service
@@ -94,18 +93,11 @@ class UserService extends Service
 
     /**
      * @param int $id
-     * @param bool $needCache
      * @return User|User[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed|null
      */
-    public function getUserById(int $id, bool $needCache = false)
+    public function getUserById(int $id)
     {
-        if ($needCache) {
-            return Cache::rememberForever('user_'.$id, function () use ($id) {
-                return User::query()->with(['level'])->findOrFail($id);
-            });
-        } else {
-            return User::query()->with(['level'])->findOrFail($id);
-        }
+        return User::query()->findOrFail($id);
     }
 
     /**

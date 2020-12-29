@@ -3,9 +3,9 @@
 namespace App\Auth;
 
 use App\Models\User;
-use App\Services\UserService;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
+use Illuminate\Support\Facades\Cache;
 
 class CacheEloquentUserProvider extends EloquentUserProvider
 {
@@ -26,8 +26,12 @@ class CacheEloquentUserProvider extends EloquentUserProvider
      */
     public function retrieveById($identifier)
     {
-        $userService = app(UserService::class);
+        return Cache::rememberForever('user_'.$identifier, function () use ($identifier) {
+            $model = $this->createModel();
 
-        return $userService->getUserById($identifier, true);
+            return $this->newModelQuery($model)
+                ->where($model->getAuthIdentifierName(), $identifier)
+                ->first();
+        });
     }
 }

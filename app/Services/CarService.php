@@ -14,10 +14,13 @@ class CarService
     {
         return Car::query()
             ->with([
-                'users' => function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
+                'level' => function ($query) {
+                    $query->select(['id', 'name']);
                 },
             ])
+            ->whereHas('users', function ($query) use ($userId) {
+                $query->where('user_id', 1);
+            })
             ->orderByDesc('id')
             ->paginate($params['limit'] ?? config('info.page.limit'));
     }
@@ -29,9 +32,7 @@ class CarService
      */
     public function store(string $license, int $userId = null)
     {
-        $car = new Car();
-        $car->license = $license;
-        $car->save();
+        $car = $this->getCarByLicense($license, true);
         if ($userId) {
             $car->users()->attach($userId);
         }
@@ -47,9 +48,7 @@ class CarService
      */
     public function delete(Car $car, int $userId = null)
     {
-        $car->users()->detach($userId);
-
-        return $car->delete();
+        return (bool) $car->users()->detach($userId);
     }
 
     /**
