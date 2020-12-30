@@ -12,8 +12,10 @@ use BenSampo\Enum\Enum;
 final class PaymentEnum extends Enum
 {
     const CASH = 0;
-    const WECHAT = 1;
-    const ALI = 2;
+    const FREE = 1;
+    const LEVEL = 2;
+    const WECHAT = 3;
+    const ALI = 4;
 
     /**
      * @param mixed $value

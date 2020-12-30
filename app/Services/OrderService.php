@@ -62,7 +62,7 @@ class OrderService extends Service
         $no = $this->getNo();
 
         return Order::create([
-            'no' => $no,
+            'no' => 'P' . $no,
             'car_id' => $car->id,
             'enter_barrier_id' => $enterBarrierId,
             'entered_at' => $enteredAt ?: now(),
@@ -88,14 +88,14 @@ class OrderService extends Service
     {
         $car = app(CarService::class)->getCarByLicense($license);
         if (! $car) {
-            throw new BusinessException('查询错误【暂无该车辆正在进行中的订单】');
+            throw new BusinessException('查询错误【车辆信息不存在】');
         }
         $order = $this->hasOrderParking($car->id, true);
         if (! $order) {
             throw new BusinessException('查询错误【该车辆暂无正在进行中的订单】');
         }
-        $price = $this->getParkingOrderPrice($order);
-        $time = $this->getParkingOrderTimeSpent($order);
+        //$price = $this->getParkingOrderPrice($order);
+        //$time = $this->getParkingOrderTimeSpent($order);
 
         return compact('order', 'price', 'time');
     }
@@ -113,7 +113,7 @@ class OrderService extends Service
             throw new BusinessException('订单支付失败，该订单已完成！');
         }
         $body = '支付停车费';
-        $price = $this->getParkingOrderPrice($order);
+        //$price = $this->getParkingOrderPrice($order);
 
         return app(PayService::class)->sendPay($order->no, $body, $price, $payment, $user);
     }
@@ -139,13 +139,17 @@ class OrderService extends Service
      * @param $order
      * @return string
      */
-    public function getParkingOrderPrice($order)
+    public function getOrderPrice($order)
     {
-        if (is_int($order)) {
+        if (! $order instanceof Order) {
             $order = $this->getOrderById($order);
         }
-        if ($order->status !== OrderStatusEnum::PARKING) {
-            throw new BusinessException('订单状态有误');
+        if ($order->status == OrderStatusEnum::DONE) {
+            return $order->price;
+        }else{
+
+            $now = now();
+            $diff = $order->entered_at->diff($now);
         }
 
         $a = now();
@@ -172,21 +176,14 @@ class OrderService extends Service
         }
     }
 
-    /**
-     * @param $order
-     * @return int[]
-     * @throws BusinessException
-     */
-    public function getParkingOrderTimeSpent($order)
+
+    public function getOrderDiffTime($order)
     {
         if (! $order instanceof Order) {
             $order = $this->getOrderById($order);
         }
-        if ($order->status !== OrderStatusEnum::PARKING) {
-            throw new BusinessException('订单状态有误');
-        }
 
-        return $order->entered_at->diffAsCarbonInterval(now())->toArray();
+        return $order->entered_at->diff($order->status == OrderStatusEnum::PARKING ? now() : $order->outed_at);
     }
 
     /**
