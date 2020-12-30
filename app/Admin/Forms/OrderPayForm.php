@@ -23,19 +23,14 @@ class OrderPayForm extends Form implements LazyRenderable
     {
         $orderId = $this->payload['id'];
         try {
-            app(OrderService::class)->setOrderDone(
-                $orderId,
-                PaymentEnum::CASH,
-                $input['out_barrier_id']
-            );
-
+            //TODO
             return $this->response()
                 ->success('缴费成功，通知客户15分钟内离场。页面即将刷新..')
                 ->refresh();
         } catch (\Exception $exception) {
             return $this
                 ->response()
-                ->error('缴费失败：'.$exception->getMessage())
+                ->error('缴费失败【'.$exception->getMessage().'】')
                 ->refresh();
         }
     }
@@ -54,7 +49,7 @@ class OrderPayForm extends Form implements LazyRenderable
             ->required();
         $this->text('price', '金额')
             ->disable()
-            ->help('停车费用');
+            ->help('停车费用。如果金额为0，则代表当前车辆是月卡或者当前是免费时间，可以直接离场，无需提交表单！');
         $this->radio('payment', '支付方式')
             ->help('人工缴费仅支持现金支付（包含收款码）')
             ->default(PaymentEnum::CASH)
@@ -70,8 +65,26 @@ class OrderPayForm extends Form implements LazyRenderable
     public function default()
     {
         return [
-            'price' => app(OrderService::class)->getOrderPrice($this->payload['id']),
+            'price' => $this->getOrderPrice($this->payload['id']),
             'payment' => PaymentEnum::CASH,
         ];
+    }
+
+    /**
+     * @param int $id
+     * @return int|mixed|string|null
+     */
+    protected function getOrderPrice(int $id)
+    {
+        return app(OrderService::class)->getOrderPrice($this->getOrder($id));
+    }
+
+    /**
+     * @param int $id
+     * @return \App\Models\Order|\App\Models\Order[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    protected function getOrder(int $id)
+    {
+        return app(OrderService::class)->getOrderById($id);
     }
 }

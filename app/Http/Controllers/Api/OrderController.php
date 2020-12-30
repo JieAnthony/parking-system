@@ -38,10 +38,11 @@ class OrderController extends Controller
     /**
      * @param Order $order
      * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\BusinessException
      */
     public function show(Order $order)
     {
-        return $this->response()->success('ok', $this->orderService->getOrderDetail($order));
+        return $this->response()->success('ok', $this->orderService->getUserOrderDetail($order));
     }
 
     /**
@@ -51,9 +52,6 @@ class OrderController extends Controller
      */
     public function find(LicenseRequest $request)
     {
-        $license = $request->get('license');
-
-        return $this->response()->success('ok', $this->orderService->findCarOrder($license));
     }
 
     /**
@@ -64,11 +62,6 @@ class OrderController extends Controller
      */
     public function pay(PaymentRequest $request, Order $order)
     {
-        /** @var \App\Models\User $user */
-        $user = $request->user();
-        $payment = $request->get('payment');
-
-        return $this->response()->success('ok', $this->orderService->pay($order, $payment, $user));
     }
 
     /**

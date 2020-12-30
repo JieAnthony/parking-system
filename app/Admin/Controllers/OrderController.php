@@ -80,14 +80,14 @@ class OrderController extends AdminController
                     '离场时间',
                 ];
                 /** @var \Illuminate\Support\Carbon $diffAt */
-                $diffAt = ($this->status == OrderStatusEnum::DONE)
+                $outedAt = ($this->status == OrderStatusEnum::DONE)
                     ? $this->outed_at
                     : now();
-                $timeString = $this->entered_at->diffForHumans($diffAt, [
-                    'join' => ',',
-                    'syntax' => CarbonInterface::DIFF_ABSOLUTE,
-                    'options' => CarbonInterface::NO_ZERO_DIFF,
-                    'parts' => 3,
+                $diff = $this->entered_at->diff($outedAt);
+                $timeString = implode(',', [
+                    $diff->days.'天',
+                    $diff->h.'小时',
+                    $diff->i.'分钟',
                 ]);
                 if ($this->status == OrderStatusEnum::DONE) {
                     $payment = ($this->payed_at) ? PaymentEnum::getDescription($this->payment) : '免费时间';
@@ -204,12 +204,11 @@ class OrderController extends AdminController
         $enteredAt = request()->get('entered_at') ?: null;
         $orderService = app(OrderService::class);
         try {
-            $order = $orderService->generate($license, $enterBarrierId, $enteredAt);
+            //$order = $orderService->generateOrder($license, $enterBarrierId, $enteredAt);
 
             return $this->sendResponse(
                 $this->response()
-                    ->success('创建订单成功，进场时间为：'.$order->entered_at)
-            );
+                    ->success('创建订单成功')); //TODO
         } catch (\Exception $exception) {
             return $this->sendResponse(
                 $this->response()

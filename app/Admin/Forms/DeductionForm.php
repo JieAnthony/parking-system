@@ -30,17 +30,16 @@ class DeductionForm extends Form
     {
         $this->confirm('您确定要修改扣费方式吗？修改成功会立即生效');
         $this->disableResetButton();
-        $this->number('free', '免费时间')
+        $this->number('free_time', '免费时间')
             ->help('单位：分钟。最低10分钟')
             ->default(10)
             ->required()
             ->rules('integer|min:10');
-        $this->number('max', '封顶金额')
+        $this->number('top_price', '封顶金额')
             ->help('单位：元。必须设置')
             ->required()
             ->rules('integer|gt:0');
-
-        $this->number('every_hour', '每小时费用')
+        $this->number('per_hour', '每小时费用')
             ->help('单位：元。必须设置')
             ->required()
             ->rules('integer|gt:0');

@@ -32,7 +32,6 @@ class MqttPublishCommand extends Command
         parent::__construct();
     }
 
-
     public function handle()
     {
         $config = [
@@ -52,7 +51,7 @@ class MqttPublishCommand extends Command
         ];
         $time = time();
         $this->info($time);
-        Coroutine\run(function () use ($config,$time) {
+        Coroutine\run(function () use ($config, $time) {
             $client = new Client($config, ['open_mqtt_protocol' => true, 'package_max_length' => 2 * 1024 * 1024]);
             while (! $client->connect()) {
                 Coroutine::sleep(3);
@@ -60,7 +59,7 @@ class MqttPublishCommand extends Command
             }
             $response = $client->publish(
                 'test',
-                '{"time":' . $time . '}',
+                '{"time":'.$time.'}',
                 1,
                 0,
                 0,

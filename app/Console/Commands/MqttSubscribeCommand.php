@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Simps\MQTT\Hex\ReasonCode;
-use Swoole\Coroutine;
 use Simps\MQTT\Client;
+use Simps\MQTT\Hex\ReasonCode;
 use Simps\MQTT\Types;
+use Swoole\Coroutine;
 
 class MqttSubscribeCommand extends Command
 {
@@ -78,7 +78,7 @@ class MqttSubscribeCommand extends Command
                 if (isset($config['keep_alive']) && $timeSincePing < (time() - $config['keep_alive'])) {
                     $buffer = $client->ping();
                     if ($buffer) {
-                        $this->info('send ping success' . PHP_EOL);
+                        $this->info('send ping success'.PHP_EOL);
                         $timeSincePing = time();
                     } else {
                         $client->close();
@@ -93,12 +93,11 @@ class MqttSubscribeCommand extends Command
                         [
                             'type' => Types::PUBACK,
                             'message_id' => $buffer['message_id'],
-                            'code' => ReasonCode::SUCCESS
+                            'code' => ReasonCode::SUCCESS,
                         ]
                     );
                 }
             }
         });
-
     }
 }

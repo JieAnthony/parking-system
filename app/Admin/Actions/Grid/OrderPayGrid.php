@@ -18,7 +18,6 @@ class OrderPayGrid extends RowAction
      */
     public function render()
     {
-        // 实例化表单类并传递自定义参数
         $form = OrderPayForm::make()->payload(['id' => $this->getKey()]);
 
         return Modal::make()
