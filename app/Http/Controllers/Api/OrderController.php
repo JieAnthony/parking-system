@@ -52,6 +52,9 @@ class OrderController extends Controller
      */
     public function find(LicenseRequest $request)
     {
+        $license = $request->get('license');
+
+        return $this->response()->success('ok', $this->orderService->findOrder($license));
     }
 
     /**

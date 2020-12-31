@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,9 +26,9 @@ class PaymentRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment' => [
+            'payment_mode' => [
                 'required',
-                Rule::in(PaymentEnum::getValues()),
+                Rule::in(PaymentModeEnum::getValues()),
             ],
         ];
     }

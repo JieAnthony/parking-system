@@ -21,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
         \Illuminate\Auth\Events\Logout::class => [
 
         ],
+        //TODO
     ];
 
     /**

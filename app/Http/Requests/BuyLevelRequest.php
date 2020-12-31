@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -32,11 +32,10 @@ class BuyLevelRequest extends FormRequest
             'car_id' => [
                 'required',
                 Rule::exists('cars', 'id'),
-                Rule::exists('user_has_cars', 'car_id')->where('user_id', $user->id),
             ],
-            'payment' => [
+            'payment_mode' => [
                 'required',
-                Rule::in(PaymentEnum::getValues()),
+                Rule::in(PaymentModeEnum::getValues()),
             ],
         ];
     }

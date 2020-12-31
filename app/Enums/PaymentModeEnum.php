@@ -9,11 +9,11 @@ use BenSampo\Enum\Enum;
  * @method static static WECHAT()
  * @method static static ALI()
  */
-final class PaymentEnum extends Enum
+final class PaymentModeEnum extends Enum
 {
-    const CASH = 0;
-    const FREE = 1;
-    const LEVEL = 2;
+    const LEVEL_CAR = 0;
+    const FREE_TIME = 1;
+    const CASH = 2;
     const WECHAT = 3;
     const ALI = 4;
 

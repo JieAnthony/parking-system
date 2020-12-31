@@ -46,7 +46,7 @@ class LevelService extends Service
             'user_id' => $user->id,
             'level_id' => $level->id,
             'car_id' => $carId,
-            'payment' => $payment,
+            'payment_mode' => $payment,
             'price' => $level->price,
         ]);
         $body = '购买级别【'.$level->name.'】';

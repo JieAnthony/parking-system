@@ -38,5 +38,6 @@ class SaveAdminCommand extends Command
             'tables' => implode(',', $tables),
             '--force' => true,
         ]);
+        $this->info('done!');
     }
 }

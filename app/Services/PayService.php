@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use App\Enums\UserFromEnum;
 use App\Models\User;
 
@@ -12,18 +12,18 @@ class PayService
      * @param string $no
      * @param string $body
      * @param float $price
-     * @param int $payment
+     * @param int $paymentMode
      * @param User|null $user
      * @return false|string|\Symfony\Component\HttpFoundation\Response|\Yansongda\Supports\Collection
      */
-    public function sendPay(string $no, string $body, float $price, int $payment, User $user = null)
+    public function sendPay(string $no, string $body, float $price, int $paymentMode, User $user = null)
     {
         $order = [
             'out_trade_no' => $no,
         ];
         /** @var \Jenssegers\Agent\Agent $agent */
         $agent = app('agent');
-        if ($payment == PaymentEnum::WECHAT) {
+        if ($paymentMode == PaymentModeEnum::WECHAT) {
             $order['body'] = $body;
             $order['total_fee'] = bcmul($price, 100, 2);
             /** @var \Yansongda\Pay\Gateways\Wechat $wechatPay */

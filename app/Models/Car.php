@@ -11,7 +11,7 @@ namespace App\Models;
  * @property int $level_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $end_at
+ * @property mixed|null $end_at
  * @property-read \App\Models\Level $level
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  * @property-read int|null $orders_count

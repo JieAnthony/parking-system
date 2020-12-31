@@ -10,7 +10,7 @@ namespace App\Models;
  * @property int $user_id
  * @property int $car_id
  * @property int $level_id
- * @property int|null $payment
+ * @property int|null $payment_mode
  * @property mixed|null $price
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -32,7 +32,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereLevelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereNo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePaymentMode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereUpdatedAt($value)
@@ -50,7 +50,7 @@ class Finance extends Model
         'car_id',
         'level_id',
         'price',
-        'payment',
+        'payment_mode',
         'status',
     ];
 

@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Finance;
 use App\Enums\FinanceEnum;
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
@@ -44,8 +44,8 @@ class FinanceController extends AdminController
             $grid->column('no', '订单号');
             $grid->column('user.username', '会员');
             $grid->column('level.name', '购买级别');
-            $grid->column('payment', '支付方式')->display(function ($payment) {
-                return PaymentEnum::getDescription($payment);
+            $grid->column('payment_mode', '支付方式')->display(function ($paymentMode) {
+                return PaymentModeEnum::getDescription($paymentMode);
             });
             $grid->column('price', '金额');
             $grid->column('status', '状态')
@@ -82,7 +82,7 @@ class FinanceController extends AdminController
             $show->field('no');
             $show->field('user_id');
             $show->field('level_id');
-            $show->field('payment');
+            $show->field('payment_mode');
             $show->field('price');
             $show->field('status');
             $show->field('created_at');
@@ -102,7 +102,7 @@ class FinanceController extends AdminController
             $form->text('no');
             $form->text('user_id');
             $form->text('level_id');
-            $form->text('payment');
+            $form->text('payment_mode');
             $form->text('price');
             $form->text('status');
 

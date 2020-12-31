@@ -36,7 +36,7 @@ class LevelController extends Controller
     public function buy(BuyLevelRequest $request, Level $level)
     {
         $user = $request->user();
-        $payment = $request->get('payment');
+        $payment = $request->get('payment_mode');
         $carId = $request->get('car_id');
 
         return $this->response()->success('ok', $this->levelService->buy($level, $user, $carId, $payment));

@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Admin\Actions\Grid\OrderPayGrid;
 use App\Admin\Repositories\Order;
 use App\Enums\OrderStatusEnum;
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use App\Services\OrderService;
 use Carbon\CarbonInterface;
 use Dcat\Admin\Form;
@@ -89,11 +89,7 @@ class OrderController extends AdminController
                     $diff->h.'小时',
                     $diff->i.'分钟',
                 ]);
-                if ($this->status == OrderStatusEnum::DONE) {
-                    $payment = ($this->payed_at) ? PaymentEnum::getDescription($this->payment) : '免费时间';
-                } else {
-                    $payment = '暂无';
-                }
+                $payment = $this->payment_mode ? PaymentModeEnum::getDescription($this->payment_mode) : '暂无';
                 $data = [
                     [
                         $timeString,
@@ -170,7 +166,7 @@ class OrderController extends AdminController
             });
             $show->field('支付方式')->as(function () {
                 if ($this->status == OrderStatusEnum::DONE) {
-                    return ($this->payed_at) ? PaymentEnum::getDescription($this->payment) : '免费时间';
+                    return ($this->payed_at) ? PaymentModeEnum::getDescription($this->payment_mode) : '免费时间';
                 } else {
                     return '暂无';
                 }
@@ -204,11 +200,11 @@ class OrderController extends AdminController
         $enteredAt = request()->get('entered_at') ?: null;
         $orderService = app(OrderService::class);
         try {
-            //$order = $orderService->generateOrder($license, $enterBarrierId, $enteredAt);
+            $order = $orderService->generateOrder($license, $enterBarrierId, $enteredAt);
 
             return $this->sendResponse(
                 $this->response()
-                    ->success('创建订单成功')); //TODO
+                    ->success('创建订单成功,进场时间【'.$order->entered_at.'】'));
         } catch (\Exception $exception) {
             return $this->sendResponse(
                 $this->response()
@@ -230,7 +226,7 @@ class OrderController extends AdminController
                 $form->text('license', '车牌')
                     ->minLength(7)
                     ->maxLength(9)
-                    ->rules('string');
+                    ->rules('string|car_license');
                 $form->datetime('entered_at', '进场时间')
                     ->help('不填则为当前时间');
                 $form->select('enter_barrier_id', '进场道闸')

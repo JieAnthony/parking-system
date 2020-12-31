@@ -2,7 +2,7 @@
 
 namespace App\Admin\Forms;
 
-use App\Enums\PaymentEnum;
+use App\Enums\PaymentModeEnum;
 use App\Services\OrderService;
 use Dcat\Admin\Contracts\LazyRenderable;
 use Dcat\Admin\Traits\LazyWidget;
@@ -12,18 +12,13 @@ class OrderPayForm extends Form implements LazyRenderable
 {
     use LazyWidget;
 
-    /**
-     * Handle the form request.
-     *
-     * @param array $input
-     *
-     * @return mixed
-     */
-    public function handle(array $input)
+    public function handle()
     {
         $orderId = $this->payload['id'];
+        $order = $this->getOrder($orderId);
         try {
-            //TODO
+            app(OrderService::class)->adminOrderPay($order);
+
             return $this->response()
                 ->success('缴费成功，通知客户15分钟内离场。页面即将刷新..')
                 ->refresh();
@@ -42,18 +37,13 @@ class OrderPayForm extends Form implements LazyRenderable
     {
         $this->confirm('您确认对方已付款并且设置订单为已完成吗？');
         $this->disableResetButton();
-        $this->select('out_barrier_id', '离场道闸')
-            ->options(function () {
-                return app(\App\Services\BarrierService::class)->getAdminSelect(false);
-            })
-            ->required();
         $this->text('price', '金额')
             ->disable()
             ->help('停车费用。如果金额为0，则代表当前车辆是月卡或者当前是免费时间，可以直接离场，无需提交表单！');
-        $this->radio('payment', '支付方式')
+        $this->radio('payment_mode', '支付方式')
             ->help('人工缴费仅支持现金支付（包含收款码）')
-            ->default(PaymentEnum::CASH)
-            ->options([PaymentEnum::CASH => PaymentEnum::getDescription(PaymentEnum::CASH)])
+            ->default(PaymentModeEnum::CASH)
+            ->options([PaymentModeEnum::CASH => PaymentModeEnum::getDescription(PaymentModeEnum::CASH)])
             ->disable();
     }
 
@@ -66,7 +56,7 @@ class OrderPayForm extends Form implements LazyRenderable
     {
         return [
             'price' => $this->getOrderPrice($this->payload['id']),
-            'payment' => PaymentEnum::CASH,
+            'payment_mode' => PaymentModeEnum::CASH,
         ];
     }
 
@@ -76,7 +66,12 @@ class OrderPayForm extends Form implements LazyRenderable
      */
     protected function getOrderPrice(int $id)
     {
-        return app(OrderService::class)->getOrderPrice($this->getOrder($id));
+        $order = $this->getOrder($id);
+        if ($order->car->level_id > 0) {
+            return 0;
+        }
+
+        return app(OrderService::class)->getOrderPrice($order);
     }
 
     /**

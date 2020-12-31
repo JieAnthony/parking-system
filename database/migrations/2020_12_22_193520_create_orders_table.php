@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedBigInteger('enter_barrier_id');
             $table->unsignedBigInteger('out_barrier_id')->nullable();
-            $table->unsignedTinyInteger('payment')->nullable();
+            $table->unsignedTinyInteger('payment_mode')->nullable();
             $table->decimal('price')->nullable();
             $table->timestamps();
             $table->timestamp('entered_at')->nullable();
