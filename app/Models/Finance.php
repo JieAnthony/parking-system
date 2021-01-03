@@ -52,7 +52,7 @@ class Finance extends Model
         'price',
         'payment_mode',
         'status',
-        'payed_at'
+        'payed_at',
     ];
 
     /**

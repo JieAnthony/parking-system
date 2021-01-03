@@ -35,17 +35,17 @@ class NotifyController extends Controller
             /** @var \Yansongda\Pay\Gateways\Alipay $aliPay */
             $aliPay = app('aliPay');
             $data = $aliPay->verify($request->all());
-            if (!in_array($data->trade_status, ['TRADE_SUCCESS', 'TRADE_FINISHED'])) {
+            if (! in_array($data->trade_status, ['TRADE_SUCCESS', 'TRADE_FINISHED'])) {
                 throw new \Exception('状态没有TRADE_SUCCESS 或者 TRADE_FINISHED');
             }
             $no = $data->out_trade_no;
             $payedAt = $data->gmt_payment;
             $this->handle($no, $payedAt);
         } catch (\Exception $exception) {
-            Log::error('支付宝支付失败【' . $exception->getMessage() . '】');
+            Log::error('支付宝支付失败【'.$exception->getMessage().'】');
+
             return new Response('fail');
         }
-
 
         return $aliPay->success();
     }
@@ -65,7 +65,8 @@ class NotifyController extends Controller
             $payedAt = $data->time_end;
             $this->handle($no, $payedAt);
         } catch (\Exception $exception) {
-            Log::error('微信支付失败【' . $exception->getMessage() . '】');
+            Log::error('微信支付失败【'.$exception->getMessage().'】');
+
             return new Response(
                 Support::toXml(['return_code' => 'FAIL', 'return_msg' => 'FAIL']),
                 200,

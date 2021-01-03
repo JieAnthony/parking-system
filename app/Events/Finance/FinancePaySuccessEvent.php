@@ -19,5 +19,4 @@ class FinancePaySuccessEvent
     {
         $this->finance = $finance;
     }
-
 }

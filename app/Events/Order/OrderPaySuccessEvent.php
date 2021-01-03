@@ -19,5 +19,4 @@ class OrderPaySuccessEvent
     {
         $this->order = $order;
     }
-
 }

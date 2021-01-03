@@ -32,7 +32,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\Order\OrderCarLeaveEvent::class => [
 
-        ]
+        ],
     ];
 
     /**

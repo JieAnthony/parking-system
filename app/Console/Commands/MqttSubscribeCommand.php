@@ -36,11 +36,10 @@ class MqttSubscribeCommand extends Command
 
     public function handle()
     {
-
         Coroutine\run(function () {
             $config = config('mqtt');
             $client = new Client($config['config'], $config['swooleConfig']);
-            while (!$data = $client->connect()) {
+            while (! $data = $client->connect()) {
                 Coroutine::sleep(3);
                 $client->connect();
             }
@@ -56,7 +55,7 @@ class MqttSubscribeCommand extends Command
                     'no_local' => true,
                     'retain_as_published' => true,
                     'retain_handling' => 2,
-                ]
+                ],
             ];
             $timeSincePing = time();
             $res = $client->subscribe($topics);
@@ -73,7 +72,7 @@ class MqttSubscribeCommand extends Command
                     $buffer = $client->ping();
                     dump(3, $buffer);
                     if ($buffer) {
-                        $this->info(now()->toDateTimeString() . 'send ping success' . PHP_EOL);
+                        $this->info(now()->toDateTimeString().'send ping success'.PHP_EOL);
                         $timeSincePing = time();
                     } else {
                         $client->close();

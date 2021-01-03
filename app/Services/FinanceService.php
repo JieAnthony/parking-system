@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Events\Finance\FinancePaySuccessEvent;
-use App\Exceptions\BusinessException;
 use App\Models\Finance;
 use Carbon\Carbon;
 
@@ -26,10 +25,10 @@ class FinanceService
      * @param string $payedAt
      * @return Finance|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
-    public function handlePaySuccess(string $no,string $payedAt)
+    public function handlePaySuccess(string $no, string $payedAt)
     {
-        $finance = Finance::query()->where('no',$no)->firstOrFail();
-        if ($finance->status){
+        $finance = Finance::query()->where('no', $no)->firstOrFail();
+        if ($finance->status) {
             return $finance;
         }
         $level = $finance->level;

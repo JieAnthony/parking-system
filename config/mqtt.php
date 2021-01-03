@@ -22,5 +22,5 @@ return [
         'connect_timeout' => 1.0,
         'write_timeout' => 5.0,
         'read_timeout' => 0.5,
-    ]
+    ],
 ];

@@ -54,7 +54,7 @@ class CarService
      */
     public function delete(Car $car, int $userId = null)
     {
-        return (bool)$car->users()->detach($userId);
+        return (bool) $car->users()->detach($userId);
     }
 
     /**

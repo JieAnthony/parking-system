@@ -17,7 +17,6 @@ class OrderPayForm extends Form implements LazyRenderable
         $orderId = $this->payload['id'];
         $order = $this->getOrder($orderId);
         try {
-
             app(OrderService::class)->handleOrder($order, PaymentModeEnum::CASH);
 
             return $this->response()
@@ -27,7 +26,7 @@ class OrderPayForm extends Form implements LazyRenderable
             return $this
                 ->response()
                 ->timeout(10)
-                ->error('缴费失败【' . $exception->getMessage() . '】')
+                ->error('缴费失败【'.$exception->getMessage().'】')
                 ->refresh();
         }
     }

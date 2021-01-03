@@ -40,7 +40,7 @@ class MqttPublishCommand extends Command
             'time_out' => 5,
             'user_name' => '',
             'password' => '',
-            'client_id' => 'parking_35bc9224',//Client::genClientID(),
+            'client_id' => 'parking_35bc9224', //Client::genClientID(),
             'keep_alive' => 0,
             'properties' => [
                 'session_expiry_interval' => 0,
@@ -75,18 +75,17 @@ class MqttPublishCommand extends Command
             'write_timeout' => 5.0,
             'read_timeout' => 0.5,
         ];
-        Coroutine\run(function () use($config,$sConfig,$time){
+        Coroutine\run(function () use ($config, $sConfig, $time) {
             $client = new Client($config, $sConfig);
-            while (!$client->connect()) {
+            while (! $client->connect()) {
                 Coroutine::sleep(3);
                 $client->connect();
             }
             while (true) {
-                $response = $client->publish('off', '{"time":' . $time . '}', 1);
+                $response = $client->publish('off', '{"time":'.$time.'}', 1);
                 var_dump($response);
                 Coroutine::sleep(3);
             }
         });
-
     }
 }

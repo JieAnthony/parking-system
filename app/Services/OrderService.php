@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Enums\OrderStatusEnum;
-use App\Enums\PaymentModeEnum;
 use App\Events\Order\OrderCarLeaveEvent;
 use App\Events\Order\OrderCreatedEvent;
 use App\Events\Order\OrderPaySuccessEvent;
@@ -77,7 +76,7 @@ class OrderService extends Service
             throw new BusinessException('该车辆目前已有进行中的订单，操作有误！');
         }
         $order = new Order();
-        $order->no = 'P' . $this->getNo();
+        $order->no = 'P'.$this->getNo();
         $order->car_id = $car->id;
         $order->enter_barrier_id = $enterBarrierId;
         $order->entered_at = $enteredAt ?: now();
@@ -125,7 +124,7 @@ class OrderService extends Service
                 }
             }
             if ($diff->i !== 0) {
-                $price += (int)round(bcmul($diff->i, $perMinute, 3));
+                $price += (int) round(bcmul($diff->i, $perMinute, 3));
             }
         }
         if ($needException && empty($price)) {
@@ -152,14 +151,14 @@ class OrderService extends Service
     public function findOrder(string $license)
     {
         $car = app(CarService::class)->getCarByLicense($license);
-        if (!$car) {
+        if (! $car) {
             throw new BusinessException('暂无该车辆信息，请重新输入');
         }
         $order = Order::query()
             ->where('car_id', $car->id)
             ->where('status', OrderStatusEnum::PARKING)
             ->first();
-        if (!$order) {
+        if (! $order) {
             throw new BusinessException('暂时没有查询到该车辆有正在进行中的订单');
         }
         $price = $this->getOrderPrice($order, true);
@@ -188,7 +187,6 @@ class OrderService extends Service
         return $payData;
     }
 
-
     /**
      * @param Order $order
      * @param int $paymentMode
@@ -200,7 +198,7 @@ class OrderService extends Service
     public function handleOrder(Order $order, int $paymentMode, float $price = null, $payedAt = null)
     {
         $this->beforeCheckOrder($order);
-        if (!$price) {
+        if (! $price) {
             $price = $this->getOrderPrice($order, true);
         }
         $order->status = OrderStatusEnum::DONE;
