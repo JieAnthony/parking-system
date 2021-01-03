@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
 use App\Models\Car;
+use App\Models\User;
 
 class CarService
 {
@@ -19,22 +21,26 @@ class CarService
                 },
             ])
             ->whereHas('users', function ($query) use ($userId) {
-                $query->where('user_id', 1);
+                $query->where('user_id', $userId);
             })
+            ->where('status', true)
             ->orderByDesc('id')
-            ->paginate($params['limit'] ?? config('info.page.limit'));
+            ->paginate(config('info.page.limit'));
     }
 
     /**
      * @param string $license
-     * @param int|null $userId
-     * @return Car
+     * @param User $user
+     * @return Car|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @throws BusinessException
      */
-    public function store(string $license, int $userId = null)
+    public function store(string $license, User $user)
     {
         $car = $this->getCarByLicense($license, true);
-        if ($userId) {
-            $car->users()->attach($userId);
+        if ($car->users()->where('user_id', $user->id)->exists()) {
+            throw new BusinessException('已添加过该车辆了！');
+        } else {
+            $car->users()->attach($user);
         }
 
         return $car;
@@ -48,7 +54,7 @@ class CarService
      */
     public function delete(Car $car, int $userId = null)
     {
-        return (bool) $car->users()->detach($userId);
+        return (bool)$car->users()->detach($userId);
     }
 
     /**

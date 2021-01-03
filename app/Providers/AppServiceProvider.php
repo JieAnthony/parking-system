@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton('aliPay', function () {
             $config = config('pay.ali');
-            $config['notify_url'] = route('api.aliPay.notify');
+            $config['notify_url'] = route('api.notify.ali');
             if ($this->app->isLocal()) {
                 $config['mode'] = 'dev';
                 $config['log']['type'] = 'single';
@@ -67,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton('wechatPay', function () {
             $config = config('pay.wechat');
-            $config['notify_url'] = route('api.wechatPay.notify');
+            $config['notify_url'] = route('api.notify.wechat');
             if ($this->app->isLocal()) {
                 $config['log']['type'] = 'single';
                 $config['log']['level'] = Logger::DEBUG;

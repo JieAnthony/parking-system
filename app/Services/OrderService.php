@@ -4,8 +4,12 @@ namespace App\Services;
 
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentModeEnum;
+use App\Events\Order\OrderCarLeaveEvent;
+use App\Events\Order\OrderCreatedEvent;
+use App\Events\Order\OrderPaySuccessEvent;
 use App\Exceptions\BusinessException;
 use App\Models\Order;
+use Carbon\Carbon;
 
 class OrderService extends Service
 {
@@ -73,11 +77,12 @@ class OrderService extends Service
             throw new BusinessException('该车辆目前已有进行中的订单，操作有误！');
         }
         $order = new Order();
-        $order->no = 'P'.$this->getNo();
+        $order->no = 'P' . $this->getNo();
         $order->car_id = $car->id;
         $order->enter_barrier_id = $enterBarrierId;
         $order->entered_at = $enteredAt ?: now();
         $order->save();
+        event(new OrderCreatedEvent($order));
 
         return $order;
     }
@@ -93,9 +98,11 @@ class OrderService extends Service
 
     /**
      * @param Order $order
+     * @param bool $needException
      * @return int|mixed|string|null
+     * @throws BusinessException
      */
-    public function getOrderPrice(Order $order)
+    public function getOrderPrice(Order $order, bool $needException = false)
     {
         if ($order->status == OrderStatusEnum::DONE) {
             return $order->price;
@@ -106,20 +113,23 @@ class OrderService extends Service
         $topPrice = $deduction['top_price'];
         $perHour = $deduction['per_hour'];
         $perMinute = bcdiv($perHour, 60, 2);
-        if ($diff->days > 0 || $diff->h > 0 || $diff->i > 15) {
+        if ($diff->days > 0 || $diff->h > 0 || $diff->i > $deduction['free_time']) {
             if ($diff->days !== 0) {
                 $price += bcmul($diff->days, $topPrice);
             }
             if ($diff->h !== 0) {
-                if ($diff->h >= bcdiv($diff->h, $perHour, 0)) {
+                if ($diff->h >= bcdiv($topPrice, $perHour, 0)) {
                     $price += $topPrice;
                 } else {
-                    $price += bcmul($diff->h, $topPrice);
+                    $price += bcmul($diff->h, $perHour);
                 }
             }
             if ($diff->i !== 0) {
-                $price += (int) round(bcmul($diff->i, $perMinute, 3));
+                $price += (int)round(bcmul($diff->i, $perMinute, 3));
             }
+        }
+        if ($needException && empty($price)) {
+            throw new BusinessException('当前车辆处于免费时间，无需缴费');
         }
 
         return $price;
@@ -142,60 +152,62 @@ class OrderService extends Service
     public function findOrder(string $license)
     {
         $car = app(CarService::class)->getCarByLicense($license);
-        if (! $car) {
-            throw new BusinessException('暂无该车辆信息');
+        if (!$car) {
+            throw new BusinessException('暂无该车辆信息，请重新输入');
         }
         $order = Order::query()
             ->where('car_id', $car->id)
             ->where('status', OrderStatusEnum::PARKING)
             ->first();
-        if (! $order) {
+        if (!$order) {
             throw new BusinessException('暂时没有查询到该车辆有正在进行中的订单');
         }
-        $price = $this->getOrderPrice($order);
+        $price = $this->getOrderPrice($order, true);
         $diff = $this->getOrderTimeDiff($order);
 
         return compact('order', 'price', 'diff');
     }
 
-    public function userOrderPay()
-    {
-    }
-
     /**
      * @param Order $order
-     * @return Order
+     * @param int $paymentMode
+     * @return false|string|\Symfony\Component\HttpFoundation\Response|\Yansongda\Supports\Collection
      * @throws BusinessException
      */
-    public function adminOrderPay(Order $order)
+    public function userPayOrder(Order $order, int $paymentMode)
     {
-        if ($order->status !== OrderStatusEnum::PARKING) {
-            throw new BusinessException('d d z t y w');
-        }
-        if ($this->checkOrderCarHasLevel($order)) {
-            throw new BusinessException('y k c l w x j f!');
-        }
-        $price = $this->getOrderPrice($order);
-        if (! $price) {
-            throw new BusinessException('free time');
-        }
+        $this->beforeCheckOrder($order);
+        $price = $this->getOrderPrice($order, true);
+        $payData = app(PayService::class)->sendPay(
+            $order->no,
+            '停车缴费',
+            $price,
+            $paymentMode
+        );
 
-        return $this->setOrderDone($order, PaymentModeEnum::CASH, $price);
+        return $payData;
     }
+
 
     /**
      * @param Order $order
      * @param int $paymentMode
-     * @param float $price
+     * @param float|null $price
      * @param null $payedAt
      * @return Order
+     * @throws BusinessException
      */
-    public function setOrderDone(Order $order, int $paymentMode, float $price, $payedAt = null)
+    public function handleOrder(Order $order, int $paymentMode, float $price = null, $payedAt = null)
     {
+        $this->beforeCheckOrder($order);
+        if (!$price) {
+            $price = $this->getOrderPrice($order, true);
+        }
         $order->status = OrderStatusEnum::DONE;
         $order->payment_mode = $paymentMode;
         $order->price = $price;
         $order->payed_at = $payedAt ?: now();
+        $order->save();
 
         return $order;
     }
@@ -211,16 +223,44 @@ class OrderService extends Service
         $order->out_barrier_id = $outBarrierId;
         $order->outed_at = $outedAt ?: now();
         $order->save();
+        event(new OrderCarLeaveEvent($order));
+
+        return $order;
+    }
+
+    /**
+     * @param string $no
+     * @param string $payedAt
+     * @return Order|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     */
+    public function handlePaySuccess(string $no, string $payedAt)
+    {
+        $order = Order::query()->where('no', $no)->firstOrFail();
+        if ($order->status) {
+            return $order;
+        }
+        $order->payed_at = Carbon::parse($payedAt);
+        $order->status = true;
+        $order->save();
+        event(new OrderPaySuccessEvent($order));
 
         return $order;
     }
 
     /**
      * @param Order $order
-     * @return bool
+     * @return Order
+     * @throws BusinessException
      */
-    protected function checkOrderCarHasLevel(Order $order)
+    protected function beforeCheckOrder(Order $order)
     {
-        return $order->car->level_id > 0;
+        if ($order->status !== OrderStatusEnum::PARKING) {
+            throw new BusinessException('订单状态有误，该订单已完成。本次操作无效');
+        }
+        if ($order->car->level_id !== 0) {
+            throw new BusinessException('当前车辆为月卡车，无需缴费即可离场。本次操作无效！');
+        }
+
+        return $order;
     }
 }

@@ -36,33 +36,27 @@ class MqttSubscribeCommand extends Command
 
     public function handle()
     {
-        $config = [
-            'host' => 'broker.emqx.io',
-            'port' => 1883,
-            'time_out' => 5,
-            'user_name' => 'username',
-            'password' => 'password',
-            'client_id' => Client::genClientID(),
-            'keep_alive' => 20,
-            'properties' => [
-                'session_expiry_interval' => 60,
-                'receive_maximum' => 200,
-                'topic_alias_maximum' => 200,
-            ],
-            'protocol_level' => 5,
-        ];
 
-        Coroutine\run(function () use ($config) {
-            $client = new Client($config, ['open_mqtt_protocol' => true, 'package_max_length' => 2 * 1024 * 1024]);
-            while (! $data = $client->connect()) {
+        Coroutine\run(function () {
+            $config = config('mqtt');
+            $client = new Client($config['config'], $config['swooleConfig']);
+            while (!$data = $client->connect()) {
                 Coroutine::sleep(3);
                 $client->connect();
             }
-            $topics['test'] = [
-                'qos' => 1,
-                'no_local' => true,
-                'retain_as_published' => true,
-                'retain_handling' => 2,
+            $topics = [
+                'on' => [
+                    'qos' => 2,
+                    'no_local' => true,
+                    'retain_as_published' => true,
+                    'retain_handling' => 2,
+                ],
+                'off' => [
+                    'qos' => 2,
+                    'no_local' => true,
+                    'retain_as_published' => true,
+                    'retain_handling' => 2,
+                ]
             ];
             $timeSincePing = time();
             $res = $client->subscribe($topics);
@@ -75,17 +69,17 @@ class MqttSubscribeCommand extends Command
                     // 收到的数据包
                     dump(2, $buffer);
                 }
-                if (isset($config['keep_alive']) && $timeSincePing < (time() - $config['keep_alive'])) {
+                if (isset($config['config']['keep_alive']) && $timeSincePing < (time() - $config['config']['keep_alive'])) {
                     $buffer = $client->ping();
+                    dump(3, $buffer);
                     if ($buffer) {
-                        $this->info('send ping success'.PHP_EOL);
+                        $this->info(now()->toDateTimeString() . 'send ping success' . PHP_EOL);
                         $timeSincePing = time();
                     } else {
                         $client->close();
                         break;
                     }
                 }
-                dump(3, $buffer);
 
                 // QoS1 发布回复
                 if (isset($buffer['type']) && $buffer['type'] === Types::PUBLISH && isset($buffer['qos']) && $buffer['qos'] === 1) {

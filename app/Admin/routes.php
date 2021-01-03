@@ -18,7 +18,6 @@ Route::group([
     $router->resource('finances', 'FinanceController')->only(['index']);
     $router->resource('cars', 'CarController');
     $router->resource('barriers', 'BarrierController')->except(['show']);
-    $router->resource('dictionaries', 'DictionaryController')->except(['show']);
     $router->resource('qas', 'QaController');
 
     $router->get('system/info', 'SystemController@info');

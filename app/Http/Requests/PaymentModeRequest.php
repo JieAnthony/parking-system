@@ -6,7 +6,7 @@ use App\Enums\PaymentModeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PaymentRequest extends FormRequest
+class PaymentModeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

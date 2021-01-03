@@ -23,6 +23,7 @@ class CreateFinancesTable extends Migration
             $table->decimal('price')->nullable();
             $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
+            $table->timestamp('payed_at')->nullable();
         });
     }
 

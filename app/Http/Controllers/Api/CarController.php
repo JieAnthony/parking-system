@@ -43,7 +43,7 @@ class CarController extends Controller
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        return $this->response()->success('ok', $this->carService->store($license, $user->id));
+        return $this->response()->success('ok', $this->carService->store($license, $user));
     }
 
     /**

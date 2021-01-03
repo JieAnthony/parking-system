@@ -52,6 +52,7 @@ class Finance extends Model
         'price',
         'payment_mode',
         'status',
+        'payed_at'
     ];
 
     /**
@@ -59,6 +60,13 @@ class Finance extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $dates = [
+        'payed_at',
     ];
 
     /**

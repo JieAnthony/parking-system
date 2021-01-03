@@ -24,8 +24,12 @@ final class PaymentModeEnum extends Enum
     public static function getDescription($value): string
     {
         switch ($value) {
+            case self::LEVEL_CAR:
+                return '月卡车辆';
+            case self::FREE_TIME:
+                return '免费时间';
             case self::CASH:
-                return '现金';
+                return '现金支付';
             case self::WECHAT:
                 return '微信支付';
             case self::ALI:

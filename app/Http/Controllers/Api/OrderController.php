@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LicenseRequest;
-use App\Http\Requests\PaymentRequest;
+use App\Http\Requests\PaymentModeRequest;
 use App\Http\Resources\CollectionResource;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -58,13 +58,16 @@ class OrderController extends Controller
     }
 
     /**
-     * @param PaymentRequest $request
+     * @param PaymentModeRequest $request
      * @param Order $order
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\BusinessException
      */
-    public function pay(PaymentRequest $request, Order $order)
+    public function pay(PaymentModeRequest $request, Order $order)
     {
+        $paymentMode = $request->get('payment_mode');
+
+        return $this->response()->success('ok', $this->orderService->userPayOrder($order, $paymentMode));
     }
 
     /**

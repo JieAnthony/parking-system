@@ -33,6 +33,6 @@ Route::name('api.')->group(function () {
         Route::post('levels/{level}/buy', [LevelController::class, 'buy'])->name('levels.buy');
         Route::apiResource('orders', OrderController::class)->only(['index', 'show', 'destroy']);
     });
-    Route::any('ali-pay/notify', [NotifyController::class, 'aliPayNotify'])->name('aliPay.notify');
-    Route::any('wechat-pay/notify', [NotifyController::class, 'wechatPayNotify'])->name('wechatPay.notify');
+    Route::any('notify/ali', [NotifyController::class, 'ali'])->name('notify.ali');
+    Route::any('notify/wechat', [NotifyController::class, 'wechat'])->name('notify.wechat');
 });
