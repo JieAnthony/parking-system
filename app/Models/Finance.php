@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Finance.
+ * App\Models\Finance
  *
  * @property int $id
  * @property string $no
@@ -15,6 +15,7 @@ namespace App\Models;
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $payed_at
  * @property-read \App\Models\Car $car
  * @property-read \App\Models\Level $level
  * @property-read \App\Models\User $user
@@ -32,6 +33,7 @@ namespace App\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereLevelId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Model whereLike(string $column, string $value, string $boolean = 'and')
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePayedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePaymentMode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Finance whereStatus($value)

@@ -16,8 +16,8 @@ class CreateCarsTable extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->string('license', 11)->unique();
-            $table->unsignedTinyInteger('status')->default(1);
-            $table->unsignedBigInteger('level_id')->default(0)->index();
+            $table->boolean('status')->unsigned()->default(true);
+            $table->unsignedInteger('level_id')->default(0)->index();
             $table->timestamps();
             $table->date('end_at')->nullable();
         });

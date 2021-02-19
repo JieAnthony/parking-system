@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Statistic.
+ * App\Models\Statistic
  *
  * @property int $id
  * @property int $created_user_total

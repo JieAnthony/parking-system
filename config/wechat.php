@@ -84,11 +84,11 @@ return [
              * callback：OAuth授权完成后的回调页地址(如果使用中间件，则随便填写。。。)
              * enforce_https：是否强制使用 HTTPS 跳转
              */
-            // 'oauth'   => [
-            //     'scopes'        => array_map('trim', explode(',', env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_SCOPES', 'snsapi_userinfo'))),
-            //     'callback'      => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', '/examples/oauth_callback.php'),
-            //     'enforce_https' => true,
-            // ],
+             'oauth'   => [
+                 'scopes'        => array_map('trim', explode(',', env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_SCOPES', 'snsapi_userinfo'))),
+                 'callback'      => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', 'http://127.0.0.1:8080/h5'),
+                 'enforce_https' => false,
+             ],
         ],
     ],
 
@@ -107,14 +107,14 @@ return [
     /*
      * 小程序
      */
-     'mini_program' => [
-         'default' => [
-             'app_id'  => env('WECHAT_MINI_PROGRAM_APPID'),
-             'secret'  => env('WECHAT_MINI_PROGRAM_SECRET'),
-             'token'   => env('WECHAT_MINI_PROGRAM_TOKEN'),
-             'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY'),
-         ],
-     ],
+//     'mini_program' => [
+//         'default' => [
+//             'app_id'  => env('WECHAT_MINI_PROGRAM_APPID'),
+//             'secret'  => env('WECHAT_MINI_PROGRAM_SECRET'),
+//             'token'   => env('WECHAT_MINI_PROGRAM_TOKEN'),
+//             'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY'),
+//         ],
+//     ],
 
     /*
      * 微信支付

@@ -31,10 +31,8 @@ class UserController extends AdminController
             $grid->column('id');
             $grid->column('avatar', '头像')->image('', 50, 50);
             $grid->column('nickname', '昵称');
-            $grid->column('username', '手机号')->copyable();
             $grid->column('created_at', '注册时间');
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->like('username', '手机号');
                 $filter->between('created_at', '注册时间')->date();
             });
         });
@@ -53,7 +51,6 @@ class UserController extends AdminController
             $show->field('id');
             $show->field('avatar', '头像');
             $show->field('nickname', '昵称');
-            $show->field('username', '手机号');
         });
     }
 

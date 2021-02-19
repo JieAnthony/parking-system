@@ -34,7 +34,7 @@ class OrderController extends AdminController
     {
         return [
             'user' => function ($query) {
-                $query->select(['id', 'username', 'nickname']);
+                $query->select(['id', 'nickname']);
             },
             'car' => function ($query) {
                 $query->select(['id', 'license']);
@@ -64,7 +64,7 @@ class OrderController extends AdminController
             $grid->column('id')->sortable();
             $grid->column('no', '订单号')->copyable();
             $grid->column('car.license', '车牌');
-            $grid->column('user.username', '会员');
+            $grid->column('user.nickname', '会员');
             $grid->column('status', '状态')->using(OrderStatusEnum::asSelectArray())->dot([false => 'warning', true => 'success']);
             $grid->column('show', '更多')->expand(function (Grid\Displayers\Expand $expand) {
                 // 设置按钮名称
@@ -116,9 +116,9 @@ class OrderController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('status', '订单状态')->select(OrderStatusEnum::asSelectArray());
                 $filter->like('no', '订单号');
-                $filter->where('username', function ($query) {
+                $filter->where('nickname', function ($query) {
                     $query->whereHas('user', function ($query) {
-                        $query->where('username', 'like', "%{$this->input}");
+                        $query->where('nickname', 'like', "%{$this->input}");
                     });
                 }, '会员手机号');
                 $filter->where('license', function ($query) {
@@ -143,7 +143,7 @@ class OrderController extends AdminController
             $show->model()->load($this->getWithArray());
             $show->field('id');
             $show->field('no', '订单号');
-            $show->field('user.username', '会员');
+            $show->field('user.nickname', '会员');
             $show->field('car.license', '车牌');
             $show->field('status', '订单状态')->using(OrderStatusEnum::asSelectArray())->dot([false => 'warning', true => 'success']);
             $show->field('停车用时')->as(function () {

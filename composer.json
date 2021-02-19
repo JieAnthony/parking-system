@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.4|^8.0",
         "ext-bcmath": "*",
         "ext-json": "*",
         "ext-pdo": "*",
@@ -24,13 +24,13 @@
         "mews/purifier": "^3.3",
         "mymediamagnet/uniquewith-validator": "^3.4",
         "orangehill/iseed": "^3.0",
-        "overtrue/easy-sms": "^1.2",
         "overtrue/laravel-lang": "^4.2",
         "overtrue/laravel-options": "^2.0",
         "overtrue/laravel-wechat": "^6.0",
         "simps/mqtt": "^1.1",
         "tucker-eric/eloquentfilter": "^2.4",
         "tymon/jwt-auth": "^1.0",
+        "workerman/mqtt": "^1.1",
         "yansongda/pay": "^2.10"
     },
     "require-dev": {

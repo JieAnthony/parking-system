@@ -34,7 +34,7 @@ class FinanceController extends AdminController
             $grid->disableCreateButton();
             $grid->model()->with([
                 'user' => function ($query) {
-                    $query->select(['id', 'username', 'nickname']);
+                    $query->select(['id', 'nickname']);
                 },
                 'level' => function ($query) {
                     $query->select(['id', 'name']);
@@ -42,7 +42,7 @@ class FinanceController extends AdminController
             ]);
             $grid->column('id')->sortable();
             $grid->column('no', '订单号');
-            $grid->column('user.username', '会员');
+            $grid->column('user.nickname', '会员');
             $grid->column('level.name', '购买级别');
             $grid->column('payment_mode', '支付方式')->display(function ($paymentMode) {
                 return PaymentModeEnum::getDescription($paymentMode);
@@ -59,11 +59,11 @@ class FinanceController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('no', '订单号');
                 $filter->equal('status', '订单状态')->select(FinanceEnum::asSelectArray());
-                $filter->where('username', function ($query) {
+                $filter->where('nickname', function ($query) {
                     $query->whereHas('user', function ($query) {
-                        $query->where('username', 'like', "%{$this->input}");
+                        $query->where('nickname', 'like', "%{$this->input}");
                     });
-                }, '会员手机号');
+                }, '会员昵称');
             });
         });
     }

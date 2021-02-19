@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Level.
+ * App\Models\Level
  *
  * @property int $id
  * @property string $name

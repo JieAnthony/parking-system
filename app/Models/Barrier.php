@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Barrier.
+ * App\Models\Barrier
  *
  * @property int $id
  * @property string $name

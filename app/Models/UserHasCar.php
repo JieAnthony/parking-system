@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * App\Models\UserHasCar.
+ * App\Models\UserHasCar
  *
  * @method static \Illuminate\Database\Eloquent\Builder|UserHasCar newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserHasCar newQuery()

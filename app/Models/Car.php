@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Car.
+ * App\Models\Car
  *
  * @property int $id
  * @property string $license

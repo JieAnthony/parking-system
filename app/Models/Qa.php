@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * App\Models\Qa.
+ * App\Models\Qa
  *
  * @property int $id
  * @property string $title

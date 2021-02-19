@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Models\Order.
+ * App\Models\Order
  *
  * @property int $id
  * @property string $no

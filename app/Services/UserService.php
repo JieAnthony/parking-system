@@ -2,49 +2,31 @@
 
 namespace App\Services;
 
-use App\Exceptions\BusinessException;
 use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Hash;
 
 class UserService extends Service
 {
+
     /**
-     * @param $username
-     * @param string $password
+     * @param string $authCode
      * @return array
-     * @throws BusinessException
+     * @throws \Overtrue\Socialite\Exceptions\AuthorizeFailedException
      */
-    public function passwordLogin($username, string $password)
+    public function authCodeLogin(string $authCode)
     {
-        /** @var User $user */
-        $user = $this->getUserByUsername($username);
-        if (! Hash::check($password, $user->password)) {
-            throw new BusinessException('密码错误');
+        /** @var \EasyWeChat\OfficialAccount\Application $app */
+        $app = app('wechat.official_account');
+        $wechatUser = $app->oauth->userFromCode($authCode);
+        $openId = $wechatUser->getId();
+        $user = $this->getUserByOpenId($openId);
+        if (! $user) {
+            $user = $this->register($wechatUser->getNickname(), $wechatUser->getAvatar(), $openId);
         }
 
         return $this->login($user);
-    }
-
-    /**
-     * @param $username
-     * @param $code
-     * @return array
-     * @throws BusinessException
-     */
-    public function smsCodeLogin($username, $code)
-    {
-        $this->checkCode($username, $code);
-        /** @var User $user */
-        $user = $this->getUserByUsername($username);
-
-        return $this->login($user);
-    }
-
-    public function miniProgramLogin($jsCode, $iv, $encryptedData)
-    {
     }
 
     /**
@@ -53,29 +35,24 @@ class UserService extends Service
      */
     public function login(User $user)
     {
-        $token = 'Bearer '.auth()->login($user);
+        $token = 'Bearer ' . auth()->login($user);
         event(new Login('api', $user, false));
 
         return compact('token', 'user');
     }
 
     /**
-     * @param int $username
-     * @param string $password
      * @param string $nickname
-     * @param int|null $code
+     * @param string $avatar
+     * @param string $openId
      * @return User|\Illuminate\Database\Eloquent\Model
-     * @throws BusinessException
      */
-    public function register(int $username, string $password, string $nickname, int $code = null)
+    public function register(string $nickname, string $avatar, string $openId)
     {
-        if ($code) {
-            $this->checkCode($username, $code);
-        }
         $user = User::create([
-            'username' => $username,
             'nickname' => $nickname,
-            'password' => Hash::make($password),
+            'avatar' => $avatar,
+            'open_id' => $openId,
         ]);
         event(new Registered($user));
 
@@ -97,28 +74,15 @@ class UserService extends Service
      */
     public function getUserById(int $id)
     {
-        return User::query()->findOrFail($id);
+        return User::query()->find($id);
     }
 
     /**
-     * @param $username
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @param string $openId
+     * @return User|null
      */
-    public function getUserByUsername(int $username)
+    public function getUserByOpenId(string $openId)
     {
-        return User::query()->where('username', $username)->firstOrFail();
-    }
-
-    /**
-     * @param $username
-     * @param $code
-     * @return bool
-     * @throws BusinessException
-     */
-    protected function checkCode(int $username, int $code)
-    {
-        $smsService = app(SmsService::class);
-
-        return $smsService->check($username, $code);
+        return User::query()->where('open_id', $openId)->first();
     }
 }
