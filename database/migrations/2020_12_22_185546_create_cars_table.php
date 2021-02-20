@@ -17,7 +17,6 @@ class CreateCarsTable extends Migration
             $table->id();
             $table->string('license', 11)->unique();
             $table->boolean('status')->unsigned()->default(true);
-            $table->unsignedInteger('level_id')->default(0)->index();
             $table->timestamps();
             $table->date('end_at')->nullable();
         });

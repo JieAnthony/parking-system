@@ -12,8 +12,6 @@ namespace App\Models;
  * @property string $note
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Car[] $cars
- * @property-read int|null $cars_count
  * @method static \Illuminate\Database\Eloquent\Builder|Model filter(array $input = [], $filter = null)
  * @method static \Illuminate\Database\Eloquent\Builder|Level newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Level newQuery()
@@ -50,12 +48,4 @@ class Level extends Model
     protected $casts = [
         'price' => 'decimal:2',
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function cars()
-    {
-        return $this->hasMany(Car::class);
-    }
 }
