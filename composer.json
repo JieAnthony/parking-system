@@ -30,7 +30,6 @@
         "simps/mqtt": "^1.1",
         "tucker-eric/eloquentfilter": "^2.4",
         "tymon/jwt-auth": "^1.0",
-        "workerman/mqtt": "^1.1",
         "yansongda/pay": "^2.10"
     },
     "require-dev": {
