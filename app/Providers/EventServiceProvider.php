@@ -21,18 +21,6 @@ class EventServiceProvider extends ServiceProvider
         \Illuminate\Auth\Events\Logout::class => [
 
         ],
-        \App\Events\Finance\FinancePaySuccessEvent::class => [
-
-        ],
-        \App\Events\Order\OrderCreatedEvent::class => [
-
-        ],
-        \App\Events\Order\OrderPaySuccessEvent::class => [
-
-        ],
-        \App\Events\Order\OrderCarLeaveEvent::class => [
-
-        ],
     ];
 
     /**

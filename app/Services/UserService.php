@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
 use App\Models\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -13,17 +14,21 @@ class UserService extends Service
     /**
      * @param string $authCode
      * @return array
-     * @throws \Overtrue\Socialite\Exceptions\AuthorizeFailedException
+     * @throws BusinessException
      */
     public function authCodeLogin(string $authCode)
     {
         /** @var \EasyWeChat\OfficialAccount\Application $app */
         $app = app('wechat.official_account');
-        $wechatUser = $app->oauth->userFromCode($authCode);
-        $openId = $wechatUser->getId();
-        $user = $this->getUserByOpenId($openId);
-        if (! $user) {
-            $user = $this->register($wechatUser->getNickname(), $wechatUser->getAvatar(), $openId);
+        try {
+            $wechatUser = $app->oauth->userFromCode($authCode);
+            $openId = $wechatUser->getId();
+            $user = $this->getUserByOpenId($openId);
+            if (! $user) {
+                $user = $this->register($wechatUser->getNickname(), $wechatUser->getAvatar(), $openId);
+            }
+        } catch (\Exception $exception) {
+            throw new BusinessException($exception->getMessage());
         }
 
         return $this->login($user);
@@ -33,7 +38,7 @@ class UserService extends Service
      * @param User $user
      * @return array
      */
-    public function login(User $user)
+    protected function login(User $user)
     {
         $token = 'Bearer ' . auth()->login($user);
         event(new Login('api', $user, false));
@@ -60,21 +65,12 @@ class UserService extends Service
     }
 
     /**
-     * return.
+     * @return void
      */
     public function logout()
     {
         event(new Logout('api', auth()->guard()->user()));
         auth()->logout();
-    }
-
-    /**
-     * @param int $id
-     * @return User|User[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed|null
-     */
-    public function getUserById(int $id)
-    {
-        return User::query()->find($id);
     }
 
     /**

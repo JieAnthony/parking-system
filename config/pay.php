@@ -1,14 +1,6 @@
 <?php
 
 return [
-    'ali' => [
-        'app_id' => env('ALI_PAY_APP_ID'),
-        'ali_public_key' => env('ALI_PAY_ALI_PUBLIC_KEY'),
-        'private_key' => env('ALI_PAY_PRIVATE_KEY'),
-        'log' => [
-            'file' => storage_path('logs/ali_pay.log'),
-        ],
-    ],
     'wechat' => [
         'app_id' => env('WECHAT_PAY_APP_ID'),
         'mch_id' => env('WECHAT_PAY_MCH_ID'),

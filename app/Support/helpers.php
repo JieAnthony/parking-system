@@ -11,7 +11,7 @@ if (! function_exists('getOption')) {
     {
         $data = Cache::get($key);
         if (! $data) {
-            $data = \Option::get($key, null);
+            $data = \Option::get($key);
             if ($data) {
                 Cache::forever($key, $data);
             }

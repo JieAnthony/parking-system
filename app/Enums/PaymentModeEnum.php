@@ -32,8 +32,6 @@ final class PaymentModeEnum extends Enum
                 return '现金支付';
             case self::WECHAT:
                 return '微信支付';
-            case self::ALI:
-                return '支付宝支付';
             default:
                 return self::getDescription($value);
         }

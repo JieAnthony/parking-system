@@ -21,10 +21,4 @@ class WeChatController extends Controller
 
         return $app->server->serve();
     }
-
-    public function test()
-    {
-        $app = app('wechat.official_account');
-        echo $app->oauth->redirect();
-    }
 }
