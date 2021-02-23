@@ -86,7 +86,7 @@ return [
              */
              'oauth'   => [
                  'scopes'        => array_map('trim', explode(',', env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_SCOPES', 'snsapi_userinfo'))),
-                 'callback'      => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', 'http://127.0.0.1:8080/h5'),
+                 'callback'      => env('WECHAT_OFFICIAL_ACCOUNT_OAUTH_CALLBACK', 'http://35284x4050.oicp.vip/#/find'),
                  'enforce_https' => false,
              ],
         ],

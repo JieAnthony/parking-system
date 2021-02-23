@@ -68,7 +68,7 @@ class MqttSubscribeCommand extends Command
                     var_dump($buffer);
                     $message = $buffer['message'];
                     if (isset($message) && $message) {
-                        event(new TestEvent($message));
+                        # TODO
                     }
                     // QoS1 PUBACK
                     if ($buffer['type'] === Types::PUBLISH && $buffer['qos'] === 1) {
