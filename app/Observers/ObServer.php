@@ -13,6 +13,6 @@ class ObServer
                 Cache::forget($value);
             }
         }
-        Cache::forget($key);
+        Cache::forget((string)$key);
     }
 }

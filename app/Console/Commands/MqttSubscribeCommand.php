@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Events\TestEvent;
-use App\Jobs\TestJob;
 use Illuminate\Console\Command;
 use Simps\MQTT\Client;
 use Simps\MQTT\Protocol\Types;
@@ -23,7 +21,7 @@ class MqttSubscribeCommand extends Command
      *
      * @var string
      */
-    protected $description = 'mqtt mqtt';
+    protected $description = 'mqtt subscribe';
 
     /**
      * Create a new command instance.
@@ -42,6 +40,7 @@ class MqttSubscribeCommand extends Command
      */
     public function handle()
     {
+        $this->info('开始订阅' . PHP_EOL);
         Coroutine\run(function () {
             $config = [
                 'userName' => '', // 用户名
@@ -61,14 +60,16 @@ class MqttSubscribeCommand extends Command
             $topics['anthony'] = 1;
             $topics['anthony1'] = 1;
             $client->subscribe($topics);
+            $this->info('订阅成功' . PHP_EOL);
             $timeSincePing = time();
             while (true) {
                 $buffer = $client->recv();
+                dump($buffer);
                 if ($buffer && $buffer !== true) {
-                    var_dump($buffer);
                     $message = $buffer['message'];
                     if (isset($message) && $message) {
                         # TODO
+                        $this->info('接收到消息' . PHP_EOL);
                     }
                     // QoS1 PUBACK
                     if ($buffer['type'] === Types::PUBLISH && $buffer['qos'] === 1) {
@@ -81,7 +82,7 @@ class MqttSubscribeCommand extends Command
                         );
                     }
                     if ($buffer['type'] === Types::DISCONNECT) {
-                        echo "Broker is disconnected\n";
+                        $this->error('Broker is disconnected' . PHP_EOL);
                         $client->close();
                         break;
                     }
@@ -90,7 +91,7 @@ class MqttSubscribeCommand extends Command
                 if ($timeSincePing <= (time() - $client->getConfig()->getKeepAlive())) {
                     $buffer = $client->ping();
                     if ($buffer) {
-                        echo 'send ping success' . PHP_EOL;
+                        $this->info('send ping success' . PHP_EOL);
                         $timeSincePing = time();
                     }
                 }

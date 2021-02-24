@@ -12,11 +12,11 @@ Route::group([
     'middleware' => config('admin.route.middleware'),
 ], function (Router $router) {
     $router->get('/', 'HomeController@index');
-    $router->resource('users', 'UserController')->except(['destroy']);
+    $router->resource('users', 'UserController')->only(['index']);
     $router->resource('levels', 'LevelController');
     $router->resource('orders', 'OrderController')->only(['index', 'create', 'store', 'show']);
     $router->resource('finances', 'FinanceController')->only(['index']);
-    $router->resource('cars', 'CarController');
+    $router->resource('cars', 'CarController')->only(['index', 'edit', 'update']);
     $router->resource('barriers', 'BarrierController')->except(['show']);
     $router->resource('qas', 'QaController');
 

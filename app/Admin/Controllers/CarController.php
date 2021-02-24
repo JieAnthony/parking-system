@@ -26,6 +26,7 @@ class CarController extends AdminController
     protected function grid()
     {
         return Grid::make(new Car(), function (Grid $grid) {
+            $grid->disableCreateButton();
             $grid->model()->orderByDesc('id');
             $grid->column('id');
             $grid->column('license', '车牌');

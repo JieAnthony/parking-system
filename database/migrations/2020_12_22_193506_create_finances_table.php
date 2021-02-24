@@ -20,7 +20,7 @@ class CreateFinancesTable extends Migration
             $table->unsignedBigInteger('car_id')->index();
             $table->unsignedInteger('level_id')->index();
             $table->decimal('price')->nullable();
-            $table->boolean('status')->unsigned()->default(0);
+            $table->boolean('status')->unsigned()->default(false);
             $table->timestamps();
             $table->timestamp('payed_at')->nullable();
         });

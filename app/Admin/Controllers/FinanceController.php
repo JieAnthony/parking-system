@@ -3,12 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\Finance;
-use App\Enums\FinanceEnum;
+use App\Enums\FinanceStatusEnum;
 use App\Enums\PaymentModeEnum;
-use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Http\Controllers\AdminController;
-use Dcat\Admin\Show;
 
 class FinanceController extends AdminController
 {
@@ -49,65 +47,22 @@ class FinanceController extends AdminController
             });
             $grid->column('price', '金额');
             $grid->column('status', '状态')
-                ->using(FinanceEnum::asSelectArray())
+                ->using(FinanceStatusEnum::asSelectArray())
                 ->dot([
-                    FinanceEnum::FAIL => 'danger',
-                    FinanceEnum::OK => 'success',
+                    FinanceStatusEnum::FAIL => 'danger',
+                    FinanceStatusEnum::OK => 'success',
                 ]);
             $grid->column('created_at');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('no', '订单号');
-                $filter->equal('status', '订单状态')->select(FinanceEnum::asSelectArray());
+                $filter->equal('status', '订单状态')->select(FinanceStatusEnum::asSelectArray());
                 $filter->where('nickname', function ($query) {
                     $query->whereHas('user', function ($query) {
                         $query->where('nickname', 'like', "%{$this->input}");
                     });
                 }, '会员昵称');
             });
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Finance(), function (Show $show) {
-            $show->field('id');
-            $show->field('no');
-            $show->field('user_id');
-            $show->field('level_id');
-            $show->field('payment_mode');
-            $show->field('price');
-            $show->field('status');
-            $show->field('created_at');
-            $show->field('updated_at');
-        });
-    }
-
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        return Form::make(new Finance(), function (Form $form) {
-            $form->display('id');
-            $form->text('no');
-            $form->text('user_id');
-            $form->text('level_id');
-            $form->text('payment_mode');
-            $form->text('price');
-            $form->text('status');
-
-            $form->display('created_at');
-            $form->display('updated_at');
         });
     }
 }

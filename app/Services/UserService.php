@@ -16,7 +16,7 @@ class UserService extends Service
      * @return array
      * @throws BusinessException
      */
-    public function authCodeLogin(string $authCode)
+    public function authCodeLogin(string $authCode): array
     {
         /** @var \EasyWeChat\OfficialAccount\Application $app */
         $app = app('wechat.official_account');
@@ -38,7 +38,7 @@ class UserService extends Service
      * @param User $user
      * @return array
      */
-    protected function login(User $user)
+    protected function login(User $user): array
     {
         $token = 'Bearer ' . auth()->login($user);
         event(new Login('api', $user, false));
@@ -77,7 +77,7 @@ class UserService extends Service
      * @param string $openId
      * @return User|null
      */
-    public function getUserByOpenId(string $openId)
+    public function getUserByOpenId(string $openId): ?User
     {
         return User::query()->where('open_id', $openId)->first();
     }

@@ -19,11 +19,26 @@ class LevelController extends Controller
         $this->levelService = $levelService;
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
+        return $this->response()->success('ok', $this->levelService->getLevels());
     }
 
+    /**
+     * @param LicenseRequest $request
+     * @param Level $level
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\BusinessException
+     */
     public function buy(LicenseRequest $request, Level $level)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $license = $request->get('license');
+
+        return $this->response()->success('pay data', $this->levelService->carBuyLevel($level, $user, $license));
     }
 }

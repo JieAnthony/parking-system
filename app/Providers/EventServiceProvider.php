@@ -21,6 +21,13 @@ class EventServiceProvider extends ServiceProvider
         \Illuminate\Auth\Events\Logout::class => [
 
         ],
+        \App\Events\UserCarsEvent::class => [
+            \App\Listeners\ClearUserCarCacheListener::class,
+        ],
+        \App\Events\FinancePaymentSuccessEvent::class => [
+            \App\Listeners\SetCarUseDaysListener::class,
+            \App\Listeners\NotificationUserBuySuccessListener::class
+        ]
     ];
 
     /**

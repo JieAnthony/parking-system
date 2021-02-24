@@ -8,7 +8,7 @@ use BenSampo\Enum\Enum;
  * @method static static OK()
  * @method static static FAIL()
  */
-final class FinanceEnum extends Enum
+final class FinanceStatusEnum extends Enum
 {
     const OK = 1;
     const FAIL = 0;

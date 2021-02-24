@@ -15,7 +15,7 @@ class CreateCarsTable extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('license', 11)->unique();
+            $table->string('license', 20)->unique();
             $table->boolean('status')->unsigned()->default(true);
             $table->timestamps();
             $table->date('end_at')->nullable();

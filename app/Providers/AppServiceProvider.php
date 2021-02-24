@@ -55,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->singleton('wechatPay', function () {
             $config = config('pay.wechat');
-            $config['notify_url'] = route('api.notify.wechat');
+            $config['notify_url'] = route('api.payment.notify');
             if ($this->app->isLocal()) {
                 $config['log']['type'] = 'single';
                 $config['log']['level'] = Logger::DEBUG;
