@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Exceptions\BusinessException;
 use App\Models\Level;
 use App\Models\User;
@@ -37,8 +36,11 @@ class LevelService extends Service
      * @param Level $level
      * @param User $user
      * @param string $license
-     * @return \Yansongda\Supports\Collection
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      * @throws BusinessException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function carBuyLevel(Level $level, User $user, string $license)
     {
@@ -46,17 +48,20 @@ class LevelService extends Service
         if ($car->end_at) {
             throw new BusinessException('this car have a level!');
         }
-        $orderNumber = app('snowflake')->id();
+        $orderNumber = 'F' . app('snowflake')->id();
         // create finance
         app(FinanceService::class)->store($orderNumber, $user->id, $car->id, $level->id, $level->price);
         $order = [
             'out_trade_no' => $orderNumber,
-            'body' => '购买月卡',
+            'body' => 'buy level',
             'total_fee' => bcmul($level->price, 100),
-            'openid' => $user->open_id
+            'openid' => $user->open_id,
+            'notify_url' => route('api.payment.notify'),
+            'trade_type' => 'JSAPI',
         ];
-        $wechatPay = app('wechatPay');
+        /** @var \EasyWeChat\Payment\Application $wechatPayment */
+        $wechatPayment = app('wechat.payment');
 
-        return $wechatPay->mp($order);
+        return $wechatPayment->order->unify($order);
     }
 }

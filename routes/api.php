@@ -29,7 +29,7 @@ Route::name('api.')->group(function () {
         Route::post('levels/{level}/buy', [LevelController::class, 'buy'])->name('levels.buy');
         Route::apiResource('orders', OrderController::class)->only(['index', 'destroy']);
         Route::get('find/order', [OrderController::class, 'find'])->name('orders.find');
-        Route::post('orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
+        Route::post('orders/{order}/payment', [OrderController::class, 'payment'])->name('orders.payment');
     });
     Route::any('payment/notify', [NotifyController::class, 'notify'])->name('payment.notify');
     Route::any('wechat', [WeChatController::class, 'serve'])->name('wechat.serve');

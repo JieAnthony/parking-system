@@ -2,12 +2,10 @@
 
 namespace App\Services;
 
-
 use App\Enums\FinanceStatusEnum;
 use App\Events\FinancePaymentSuccessEvent;
 use App\Exceptions\BusinessException;
 use App\Models\Finance;
-use Illuminate\Support\Carbon;
 
 class FinanceService
 {
@@ -56,21 +54,20 @@ class FinanceService
 
     /**
      * @param string $no
-     * @param string $payedAt
      * @return Finance|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
      * @throws BusinessException
      */
-    public function handlePaymentSuccess(string $no, string $payedAt)
+    public function handlePaymentSuccess(string $no)
     {
         $finance = $this->getFinanceByNo($no);
         if (! $finance) {
             throw new BusinessException('data not found');
         }
-        if ($finance->status) {
+        if ($finance->status == FinanceStatusEnum::OK) {
             return $finance;
         }
         $finance->status = true;
-        $finance->payed_at = Carbon::parse($payedAt);
+        $finance->payed_at = now();
         $finance->save();
         event(new FinancePaymentSuccessEvent($finance));
 

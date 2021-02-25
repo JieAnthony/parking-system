@@ -34,12 +34,33 @@ class OrderController extends Controller
         return $this->response()->success('ok', new CollectionResource($items));
     }
 
+    /**
+     * @param LicenseRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\BusinessException
+     */
     public function find(LicenseRequest $request)
     {
+        $license = $request->get('license');
+
+        return $this->response()->success('ok', $this->orderService->getParkingOrderInfo($license));
     }
 
-    public function pay(Order $order)
+    /**
+     * @param Request $request
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\BusinessException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function payment(Request $request, Order $order)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        return $this->response()->success('ok', $this->orderService->paymentParkingOrder($order, $user));
     }
 
     /**
@@ -51,6 +72,6 @@ class OrderController extends Controller
     {
         $this->authorize('own', $order);
 
-        return $this->response()->success('ok',$this->orderService->delete($order));
+        return $this->response()->success('ok', $this->orderService->delete($order));
     }
 }

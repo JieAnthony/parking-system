@@ -12,8 +12,6 @@ use Godruoyi\Snowflake\LaravelSequenceResolver;
 use Godruoyi\Snowflake\Snowflake;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Monolog\Logger;
-use Yansongda\Pay\Pay;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,19 +50,6 @@ class AppServiceProvider extends ServiceProvider
             return (new Snowflake())
                 ->setStartTimeStamp(strtotime('2020-01-01') * 1000)
                 ->setSequenceResolver(new LaravelSequenceResolver($this->app->get('cache')->store()));
-        });
-        $this->app->singleton('wechatPay', function () {
-            $config = config('pay.wechat');
-            $config['notify_url'] = route('api.payment.notify');
-            if ($this->app->isLocal()) {
-                $config['log']['type'] = 'single';
-                $config['log']['level'] = Logger::DEBUG;
-            } else {
-                $config['log']['type'] = 'daily';
-                $config['log']['level'] = Logger::INFO;
-            }
-
-            return Pay::wechat($config);
         });
     }
 
