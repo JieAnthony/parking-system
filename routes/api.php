@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('api.')->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('root');
-    Route::get('home', [HomeController::class, 'home'])->name('home');
     Route::apiResource('qas', QaController::class)->only(['index']);
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::middleware(['refresh.token'])->group(function () {

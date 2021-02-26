@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LicenseRequest;
 use App\Http\Resources\CollectionResource;
 use App\Models\Order;
+use App\Services\CarService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 
@@ -16,9 +17,15 @@ class OrderController extends Controller
      */
     public $orderService;
 
-    public function __construct(OrderService $orderService)
+    /**
+     * @var CarService
+     */
+    public $carService;
+
+    public function __construct(OrderService $orderService, CarService $carService)
     {
         $this->orderService = $orderService;
+        $this->carService = $carService;
     }
 
     /**
@@ -42,8 +49,9 @@ class OrderController extends Controller
     public function find(LicenseRequest $request)
     {
         $license = $request->get('license');
+        $car = $this->carService->getCarByLicense($license);
 
-        return $this->response()->success('ok', $this->orderService->getParkingOrderInfo($license));
+        return $this->response()->success('ok', $this->orderService->getParkingOrderInfo($car));
     }
 
     /**

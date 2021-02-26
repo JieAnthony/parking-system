@@ -11,17 +11,16 @@ use BenSampo\Enum\Enum;
  */
 final class PaymentModeEnum extends Enum
 {
-    const LEVEL_CAR = 0;
-    const FREE_TIME = 1;
-    const CASH = 2;
-    const WECHAT = 3;
-    const ALI = 4;
+    const LEVEL_CAR = 1;
+    const FREE_TIME = 2;
+    const CASH = 3;
+    const WECHAT = 4;
 
     /**
      * @param mixed $value
      * @return string
      */
-    public static function getDescription($value): string
+    public static function getDescription($value) : string
     {
         switch ($value) {
             case self::LEVEL_CAR:

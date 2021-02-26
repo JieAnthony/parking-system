@@ -16,6 +16,7 @@ class FinanceService
     public function getUserFinances(int $userId)
     {
         return Finance::query()
+            ->with(['car:id,license'])
             ->where('user_id', $userId)
             ->where('status', FinanceStatusEnum::OK)
             ->orderByDesc('id')
@@ -28,7 +29,7 @@ class FinanceService
      */
     public function getFinanceByNo(string $no)
     {
-        return Finance::query()->where('no', $no)->first();
+        return Finance::query()->where('no', $no)->firstOrFail();
     }
 
     /**
@@ -53,16 +54,11 @@ class FinanceService
     }
 
     /**
-     * @param string $no
-     * @return Finance|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
-     * @throws BusinessException
+     * @param Finance $finance
+     * @return Finance
      */
-    public function handlePaymentSuccess(string $no)
+    public function handlePaymentSuccess(Finance $finance)
     {
-        $finance = $this->getFinanceByNo($no);
-        if (! $finance) {
-            throw new BusinessException('data not found');
-        }
         if ($finance->status == FinanceStatusEnum::OK) {
             return $finance;
         }

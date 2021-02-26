@@ -26,15 +26,14 @@ class OrderService extends Service
     }
 
     /**
-     * @param string $license
+     * @param Car $car
      * @param int $enterBarrierId
      * @param null $enteredAt
      * @return Order
      * @throws BusinessException
      */
-    public function generate(string $license, int $enterBarrierId, $enteredAt = null)
+    public function generate(Car $car, int $enterBarrierId, $enteredAt = null)
     {
-        $car = app(CarService::class)->getCarByLicense($license, true);
         $hasParkingOrder = Order::query()
             ->where('car_id', $car->id)
             ->where('status', OrderStatusEnum::PARKING)
@@ -58,13 +57,10 @@ class OrderService extends Service
      * @return array
      * @throws BusinessException
      */
-    public function getParkingOrderInfo(string $license)
+    public function getParkingOrderInfo(Car $car)
     {
-        $car = $this->beforeCarCheck(null, $license);
-        $order = Order::query()
-            ->where('car_id', $car->id)
-            ->where('status', OrderStatusEnum::PARKING)
-            ->first();
+        $car = $this->beforeCarCheck($car);
+        $order = $this->getCarParkingOrder($car);
         if (! $order) {
             throw new BusinessException('no working order');
         }
@@ -91,7 +87,7 @@ class OrderService extends Service
         if ($order->status == OrderStatusEnum::DONE) {
             throw new BusinessException('order done!');
         }
-        $this->beforeCarCheck($order->car_id);
+        $this->beforeCarCheck($order->car);
         $price = $this->getParkingOrderPrice($order);
         if (! $price) {
             throw new BusinessException('in free time');
@@ -111,19 +107,22 @@ class OrderService extends Service
     }
 
     /**
-     * @param string $no
+     * @param Order $order
+     * @param int $paymentMode
+     * @param User|null $user
      * @return Order
      * @throws BusinessException
      */
-    public function handlePaymentSuccess(string $no)
+    public function handlePaymentSuccess(Order $order, int $paymentMode, User $user = null)
     {
-        $order = $this->getOrderByNo($no);
-        if (! $order) {
-            throw new BusinessException('order data not found');
-        }
         if ($order->status == OrderStatusEnum::DONE) {
             return $order;
         }
+        if ($user) {
+            $order->user_id = $user->id;
+        }
+        $order->price = $this->getParkingOrderPrice($order);
+        $order->payment_mode = $paymentMode;
         $order->status = OrderStatusEnum::DONE;
         $order->payed_at = now();
         $order->save();
@@ -132,9 +131,24 @@ class OrderService extends Service
         return $order;
     }
 
-    public function orderCarLeave(string $license)
+    public function orderCarLeave(Car $car)
     {
 
+    }
+
+    /**
+     * @param Car $car
+     * @return Order|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function getCarParkingOrder(Car $car)
+    {
+        return Order::query()
+            ->where('car_id', $car->id)
+            ->where('status', OrderStatusEnum::PARKING)
+            ->select([
+                'id', 'no', 'status', 'created_at', 'entered_at'
+            ])
+            ->first();
     }
 
     /**
@@ -148,6 +162,9 @@ class OrderService extends Service
         }
         $price = 0;
         $deduction = getOption('deduction');
+        if (! $deduction) {
+            throw new BusinessException('deduction no set!!!');
+        }
         $diff = $this->getParkingOrderTimeDiff($order);
         $topPrice = $deduction['top_price'];
         $perHour = $deduction['per_hour'];
@@ -157,7 +174,7 @@ class OrderService extends Service
                 $price += (int)bcmul($diff->days, $topPrice);
             }
             if ($diff->h !== 0) {
-                if ($diff->h >= bcdiv($topPrice, $perHour, 0)) {
+                if ($diff->h >= bcdiv($topPrice, $perHour)) {
                     $price += $topPrice;
                 } else {
                     $price += (int)bcmul($diff->h, $perHour);
@@ -196,31 +213,16 @@ class OrderService extends Service
      */
     public function getOrderByNo(string $no)
     {
-        return Order::query()->where('no', $no)->first();
+        return Order::query()->where('no', $no)->firstOrFail();
     }
 
     /**
-     * @param int|null $id
-     * @param string|null $license
-     * @return Car|Car[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|object
+     * @param Car $car
+     * @return Car
      * @throws BusinessException
      */
-    private function beforeCarCheck(int $id = null, string $license = null)
+    private function beforeCarCheck(Car $car)
     {
-        if (! $id && ! $license) {
-            throw new BusinessException('params error');
-        }
-        $carService = app(CarService::class);
-        if ($id && ! $license) {
-            $car = $carService->getCarById($id);
-        } elseif (! $id && $license) {
-            $car = $carService->getCarByLicense($license);
-        } else {
-            $car = null;
-        }
-        if (! $car) {
-            throw new BusinessException('car data not found');
-        }
         if ($car->end_at) {
             throw new BusinessException('this car is vip,no payment');
         }

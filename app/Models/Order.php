@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $status
  * @property int $enter_barrier_id
  * @property int|null $out_barrier_id
+ * @property int|null $payment_mode
  * @property mixed|null $price
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -45,6 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereOutBarrierId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereOutedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePayedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentMode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
@@ -88,6 +90,13 @@ class Order extends Model
         'payed_at',
         'entered_at',
         'outed_at',
+    ];
+
+    /**
+     * @var string[]
+     */
+    protected $hidden = [
+        'deleted_at'
     ];
 
     /**

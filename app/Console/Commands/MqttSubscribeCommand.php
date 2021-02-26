@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\CarEnterEvent;
 use Illuminate\Console\Command;
 use Simps\MQTT\Client;
 use Simps\MQTT\Protocol\Types;
@@ -42,23 +43,12 @@ class MqttSubscribeCommand extends Command
     {
         $this->info('开始订阅' . PHP_EOL);
         Coroutine\run(function () {
-            $config = [
-                'userName' => '', // 用户名
-                'password' => '', // 密码
-                'clientId' => '', // 客户端id
-                'keepAlive' => 50, // 默认0秒，设置成0代表禁用
-                'protocolName' => 'MQTT', // 协议名，默认为MQTT(3.1.1版本)，也可为MQIsdp(3.1版本)
-                'protocolLevel' => 4, // 协议等级，MQTT3.1.1版本为4，5.0版本为5，MQIsdp为3
-                'properties' => [], // MQTT5 中所需要的属性
-                'delay' => 3000, // 重连时的延迟时间 (毫秒)
-                'maxAttempts' => 5, // 最大重连次数。默认-1，表示不限制
-                'swooleConfig' => []
-            ];
-            $configObj = new \Simps\MQTT\Config\ClientConfig($config);
-            $client = new Client('172.17.0.3', 1883, $configObj);
+            $config = config('mqtt');
+            $configObj = new \Simps\MQTT\Config\ClientConfig($config['config']);
+            $client = new Client($config['host'], $config['port'], $configObj);
             $client->connect(true);
-            $topics['anthony'] = 1;
-            $topics['anthony1'] = 1;
+            $topics['serve/enter'] = 1;
+            $topics['serve/out'] = 1;
             $client->subscribe($topics);
             $this->info('订阅成功' . PHP_EOL);
             $timeSincePing = time();
@@ -66,9 +56,24 @@ class MqttSubscribeCommand extends Command
                 $buffer = $client->recv();
                 dump($buffer);
                 if ($buffer && $buffer !== true) {
-                    $message = $buffer['message'];
-                    if (isset($message) && $message) {
-                        # TODO
+                    /**
+                     * array:7 [
+                     *  "type" => 3
+                     *  "dup" => 0
+                     *  "qos" => 1
+                     *  "retain" => 0
+                     *  "topic" => "string"
+                     *  "message" => "json"
+                     *  "message_id" => 1
+                     * ]
+                     */
+                    if (isset($buffer['message']) && $buffer['message']) {
+                        if ($buffer['topic'] == 'serve/enter') {
+                            $data = json_decode($buffer['message'], true);
+                            event(new CarEnterEvent($data['l'], $data['did']));
+                        } else {
+
+                        }
                         $this->info('接收到消息' . PHP_EOL);
                     }
                     // QoS1 PUBACK

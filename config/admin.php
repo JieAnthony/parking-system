@@ -178,7 +178,7 @@ return [
     */
     'permission' => [
         // Whether enable permission.
-        'enable' => true,
+        'enable' =>  ! env('APP_DEBUG'),
 
         // All method to path like: auth/users/*/edit
         // or specific method to path like: get:auth/users.

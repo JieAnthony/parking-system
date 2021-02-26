@@ -28,9 +28,9 @@ class CarService
     /**
      * @param string $license
      * @param bool $needStore
-     * @return Car|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return Car|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
-    public function getCarByLicense(string $license, bool $needStore = false, bool $hasError = false)
+    public function getCarByLicense(string $license, bool $needStore = false)
     {
         $query = Car::query()->where('license', $license);
         if ($needStore) {
@@ -38,7 +38,7 @@ class CarService
                 'license' => $license,
             ]);
         } else {
-            return $query->first();
+            return $query->firstOrFail();
         }
     }
 

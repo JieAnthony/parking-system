@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CarEnterEvent;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -25,9 +26,16 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\ClearUserCarCacheListener::class,
         ],
         \App\Events\FinancePaymentSuccessEvent::class => [
-            \App\Listeners\SetCarUseDaysListener::class,
-            \App\Listeners\NotificationUserBuySuccessListener::class
-        ]
+        ],
+        \App\Events\CarEnterEvent::class => [
+            \App\Listeners\GenerateOrderListener::class
+        ],
+        \App\Events\OrderCreateEvent::class => [
+        ],
+        \App\Events\OrderPaymentSuccessEvent::class => [
+        ],
+        \App\Events\OrderCarLeaveEvent::class => [
+        ],
     ];
 
     /**

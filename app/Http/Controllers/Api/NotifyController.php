@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\PaymentModeEnum;
 use App\Http\Controllers\Controller;
 use App\Services\FinanceService;
 use App\Services\OrderService;
+use App\Services\UserService;
 
 class NotifyController extends Controller
 {
@@ -18,10 +20,16 @@ class NotifyController extends Controller
      */
     public $orderService;
 
-    public function __construct(FinanceService $financeService, OrderService $orderService)
+    /**
+     * @var UserService
+     */
+    public $userService;
+
+    public function __construct(FinanceService $financeService, OrderService $orderService, UserService $userService)
     {
         $this->financeService = $financeService;
         $this->orderService = $orderService;
+        $this->userService = $userService;
     }
 
     /**
@@ -42,19 +50,23 @@ class NotifyController extends Controller
                         $firstText = \Str::substr($outTradeNo, 0, 1);
                         switch ($firstText) {
                             case "F":
-                                $finance = $this->financeService->handlePaymentSuccess($outTradeNo);
+                                $finance = $this->financeService->getFinanceByNo($outTradeNo);
+                                $this->financeService->handlePaymentSuccess($finance);
                                 \Log::info('buy level success', ['finance' => $finance->id]);
                                 break;
                             case "P":
-                                $order = $this->orderService->handlePaymentSuccess($outTradeNo);
+                                $order = $this->orderService->getOrderByNo($outTradeNo);
+                                $user = $this->userService->getUserByOpenId($message['openid']);
+                                $this->orderService->handlePaymentSuccess($order, PaymentModeEnum::WECHAT, $user);
                                 \Log::info('payment parking order success', ['order' => $order->id]);
+
                                 break;
                             default:
                                 throw new \Exception('type error');
                         }
 
                     } catch (\Exception $exception) {
-
+                        return $fail($exception->getMessage());
                     }
                 }
             } else {
